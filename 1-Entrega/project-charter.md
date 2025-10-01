@@ -74,5 +74,8 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 - A videochamada funciona de forma básica entre dois utilizadores.  
 - A API responde corretamente nos endpoints principais.  
 - Os scripts da base de dados (criação e povoamento) estão disponíveis e funcionais.  
-- O relatório final é entregue no prazo definido.  
+- O relatório final é entregue no prazo definido.
+
+---
+
 
