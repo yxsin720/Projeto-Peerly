@@ -3,7 +3,7 @@
 O **Pearly** é uma aplicação móvel que promove a ajuda entre estudantes através da criação de perfis pessoais, onde cada utilizador indica as suas capacidades, interesses e áreas de estudo.  
 Outros estudantes podem aceder a estes perfis para trocar conhecimentos, enviar mensagens e realizar chamadas de vídeo.
 
-O problema identificado é a dificuldade em encontrar colegas com competências complementares, dentro ou fora do contexto académico, o que limita oportunidades de colaboração, estudo conjunto e desenvolvimento de novas capacidades.
+O problem identificado é a dificuldade em encontrar colegas com competências complementares, dentro ou fora do contexto académico, o que limita oportunidades de colaboração, estudo conjunto e desenvolvimento de novas capacidades.
 
 ---
 
