@@ -34,7 +34,7 @@
 
 ### Mensagem
 - id (PK)
-- conteud
+- conteud0
 - timestamp
 - remetente_id (FK)
 - destinatario_id (FK)
