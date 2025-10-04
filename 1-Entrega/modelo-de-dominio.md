@@ -1,47 +1,53 @@
 # Modelo de Domínio — Peerly
 
+O modelo de domínio do Peerly representa as principais entidades do sistema e as suas relações.
+
+---
+
 ## Entidades Principais
 
 ### Utilizador
 - id (PK)
 - nome
 - email
-- password
+- curso
 
-### Perfil
-- id (PK)
-- bio
-- foto
-- utilizador_id (FK)
-
-### ÁreaDeInteresse
-- id (PK)
-- nome
-- perfil_id (FK)
+### Tutor _(especialização de Utilizador)_
+- especialização
+- avaliaçãoMedia
 
 ### Sessão
 - id (PK)
-- utilizador1_id (FK)
-- utilizador2_id (FK)
-- data_hora
+- data
+- hora
 - estado
 
-### Videochamada
+### Disciplina
 - id (PK)
-- sessao_id (FK)
-- link
-- duracao
+- nome
 
-### Mensagem
+### Feedback
 - id (PK)
-- conteud0
-- timestamp
-- remetente_id (FK)
-- destinatario_id (FK)
+- rating
+- comentário
 
-## Relações Essenciais
-- Um **Utilizador** tem um **Perfil**  
-- Um **Perfil** pode ter várias **ÁreasDeInteresse**  
-- Um **Utilizador** envia e recebe **Mensagens**  
-- Uma **Sessão** envolve dois **Utilizadores**  
-- Uma **Videochamada** pertence a uma **Sessão**
+### Notificacao
+- id (PK)
+- mensagem
+- dataEnvio
+
+---
+
+## 🔗 Relações Essenciais
+- Um **Tutor** é um tipo de **Utilizador** (herança).  
+- Um **Utilizador** pode agendar várias **Sessões**.  
+- Cada **Sessão** está associada a uma única **Disciplina**.  
+- Uma **Sessão** pode gerar vários **Feedbacks**.  
+- Um **Utilizador** pode receber várias **Notificações**.  
+
+---
+
+## Diagrama
+
+<img width="661" height="724" alt="modelo-dominio-peerly drawio" src="https://github.com/user-attachments/assets/9fa45622-6105-4fd7-9edd-386239568847" />
+
