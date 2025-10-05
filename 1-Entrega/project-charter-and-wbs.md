@@ -28,80 +28,75 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 - Suporte a múltiplas plataformas (apenas Android será desenvolvido)  
 - Funcionalidades avançadas de videochamada (gravação, partilha de ecrã)  
 
-## 6. Entregáveis
-- Aplicação Android funcional  
-- Backend em Spring Boot com API REST documentada  
-- Modelo de domínio e base de dados relacional  
-- Relatório final e poster de apresentação  
+---
+
+# Entregáveis da 1ª Entrega
+- Estrutura inicial do repositório GitHub  
+- Mockups organizados por ecrã  
+- Modelo de domínio visual  
+- Gráfico de Gantt  
+- Poster de apresentação  
+- Documentação em Markdown  
 
 ---
 
 # Objetivos da Peerly
 
-- **Funcionais:**  
-  Permitir que os utilizadores criem um perfil com áreas de interesse, encontrem pares para partilha de conhecimento, comuniquem por chat e realizem videochamadas.  
+### Funcionais
+- Criar perfis com áreas de interesse  
+- Emparelhar utilizadores com interesses comuns  
+- Comunicar por chat e realizar videochamadas  
 
-- **Técnicos:**  
-  Desenvolver a aplicação em **Kotlin/Jetpack Compose**, com backend em **Spring Boot** e **base de dados relacional**, comunicando via **API REST documentada**.  
+### Técnicos
+- App Android em Kotlin/Jetpack Compose  
+- Backend em Spring Boot com base de dados relacional  
+- Comunicação via API REST documentada  
 
-- **De processo:**  
-  Organizar o trabalho em **ClickUp**, usar **GitHub** para versionamento e documentação, realizar reuniões semanais e entregar o relatório em **Markdown/PDF** conforme os requisitos da disciplina.  
+### De processo
+- Organização em ClickUp  
+- Versionamento e documentação no GitHub  
+- Relatório em Markdown conforme requisitos da disciplina  
 
 ---
 
 # Stakeholders
 
-- **Equipa do projeto:**  
-  - Yassin Mac‑Arthur  
-  - Francisco Baptista  
-  - Francisco Silva  
+### Equipa do Projeto
+- Yassin Mac‑Arthur  
+- Francisco Baptista  
+- Francisco Silva  
 
-- **Docentes envolvidos:**  
-  - Pedro Rosa  
-  - Nathan Campos  
+### Docentes Envolvidos
+- Pedro Rosa  
+- Nathan Campos  
 
-- **Utilizadores finais:**  
-  - Estudantes (incluindo a própria equipa)  
-  - Professores envolvidos  
-
----
-
-# Critérios de Sucesso
-
-- A aplicação instala e abre corretamente em dispositivos Android.  
-- O utilizador consegue criar conta, iniciar sessão e editar o perfil.  
-- O chat permite enviar e receber mensagens em tempo real.  
-- A videochamada funciona de forma básica entre dois utilizadores.  
-- A API responde corretamente nos endpoints principais.  
-- Os scripts da base de dados (criação e povoamento) estão disponíveis e funcionais.  
-- O relatório final é entregue no prazo definido.
+### Utilizadores Finais
+- Estudantes universitários e do ensino secundário  
 
 ---
 
-# Work Breakdown Structure — Peerly
+# Critérios de Sucesso (1ª Entrega)
+- Repositório organizado com pastas e ficheiros conforme requisitos  
+- Mockups completos e integrados no relatório  
+- Modelo de domínio visual entregue e referenciado  
+- Gráfico de Gantt incluído e contextualizado  
+- Poster criado e disponível  
+- Documentação clara e em formato Markdown  
+
+---
+
+# Work Breakdown Structure (WBS)
 
 ## 1. Gestão do Projeto
 - Organização do trabalho em ClickUp — *Yassin Mac‑Arthur*  
-- Reuniões semanais — *Todos*  
-- Coordenação com professores — *Todos*  
-- Relatório final — *Yassin Mac‑Arthur*  
-- Enquadramento, plano de trabalho e gráfico de Gantt — *Nayuka*  
+- Estruturação do repositório e relatório — *Yassin Mac‑Arthur*  
+- Planeamento e gráfico de Gantt — *Yassin Mac‑Arthur*  
 
 ## 2. Design e Documentação
-- Mockups no Figma — *Francisco Silva*  
-- Documentação da API REST — *Francisco Baptista*  
-- Poster final — *Francisco Silva* e *Francisco Baptista*  
+- Mockups no Figma e organização por pastas — *Francisco Silva*  
+- Criação do poster — *Francisco Silva*  
+- Documentação em Markdown — *Yassin Mac‑Arthur*  
 
-## 3. Desenvolvimento Mobile
-- App Android com Jetpack Compose — *Francisco Silva*  
-- Registo, login e perfil — *Francisco Silva*  
-- Chat e videochamada — *Francisco Silva*  
-
-## 4. Desenvolvimento Backend
-- API REST com Spring Boot — *Francisco Baptista*  
-- Base de dados relacional — *Francisco Baptista*  
-- Integração com a app — *Francisco Baptista*  
-
-## 5. Modelo de Domínio
-- Criação do modelo de domínio — *Yassin Mac‑Arthur*  
-
+## 3. Desenvolvimento Técnico
+- Modelo de domínio visual — *Yassin Mac‑Arthur*  
+- Estruturação dos ficheiros e pastas no GitHub — *Yassin Mac‑Arthur*
