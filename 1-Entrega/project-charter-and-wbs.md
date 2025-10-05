@@ -54,8 +54,7 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 
 ### De processo
 - Organização em ClickUp  
-- Versionamento e documentação no GitHub  
-- Relatório em Markdown conforme requisitos da disciplina  
+- Versionamento e documentação no GitHub   
 
 ---
 
