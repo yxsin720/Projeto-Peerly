@@ -12,7 +12,7 @@ O modelo de domínio do Peerly representa as principais entidades do sistema e a
 - email
 - curso
 
-### Tutor _(especialização de Utilizador)_
+### Tutor (especialização de Utilizador)
 - especialização
 - avaliaçãoMedia
 
@@ -20,7 +20,9 @@ O modelo de domínio do Peerly representa as principais entidades do sistema e a
 - id (PK)
 - data
 - hora
-- estado
+- tutor_id (FK)
+- estudante_id (FK)
+- disciplina_id (FK)
 
 ### Disciplina
 - id (PK)
@@ -35,6 +37,7 @@ O modelo de domínio do Peerly representa as principais entidades do sistema e a
 - id (PK)
 - mensagem
 - dataEnvio
+- utilizador_id (FK)
 
 ---
 
