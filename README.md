@@ -29,7 +29,7 @@ Através de perfis personalizados, os utilizadores podem encontrar colegas, agen
 **Francisco Silva:**  
 - Criação do poster  
 
-**Nayuka Jasmin:**  
+**Nayuka Malebo:**  
 - Planeamento e gráfico de Gantt  
 
 **Yassin Mac‑Arthur:**  
