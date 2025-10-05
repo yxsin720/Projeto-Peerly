@@ -9,10 +9,10 @@ Através de perfis personalizados, os utilizadores podem encontrar colegas, agen
 ## Estrutura da Entrega
 1. [Proposta Inicial](./1-Entrega/proposta-inicial.md)  
 2. [Enquadramento](./1-Entrega/enquadramento.md)  
-3. [Requisitos Funcionais e Não Funcionais](./1-Entrega/requisitos-funcionais-nao-funcionais.md)  
-4. [Casos de Utilização](./1-Entrega/casos-de-utilizacao.md)  
+3. [Project Charter and WBS](./1-Entrega/project-charter-and-wbs.md)  
+4. [Requisitos Funcionais e Não Funcionais](./1-Entrega/requisitos-funcionais-nao-funcionais.md)  
 5. [Modelo de Domínio](./1-Entrega/modelo-de-dominio.md)  
-6. [Project Charter and WBS](./1-Entrega/project-charter-and-wbs.md)  
+6. [Casos de Utilização](./1-Entrega/casos-de-utilizacao.md)  
 7. [Guiões de Teste](./1-Entrega/guioes-de-teste.md)  
 8. [Mockups e Interfaces](./1-Entrega/mockups-e-interfaces.md)  
 9. [Gráfico de Gantt](./1-Entrega/grafico-gantt.md)  
