@@ -27,7 +27,7 @@ O público-alvo principal são **estudantes universitários e do ensino secundá
 
 ### Pesquisa de Mercado
 
-O **Pearly** diferencia-se ao centrar-se exclusivamente em estudantes e no conceito de troca de competências direta (*peer-to-peer*).  
+O **Pearly** diferencia-se ao centrar-se exclusivamente em estudantes e no conceito de troca de competências direta (peer-to-peer).  
 Foram analisadas algumas plataformas de networking académico e profissional, como:
 
 - **LinkedIn** → Focado em networking profissional, mas pouco direcionado para estudantes em fase de aprendizagem.  
