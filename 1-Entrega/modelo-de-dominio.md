@@ -49,6 +49,6 @@ O modelo de domínio do Peerly representa as principais entidades do sistema e a
 
 ## Diagrama
 
-<img width="661" height="724" alt="modelo-dominio-peerly drawio" src="https://github.com/user-attachments/assets/9fa45622-6105-4fd7-9edd-386239568847" />
+![MODELO DE DOMINIO](../docs/diagrams/MODELODEDOMINIO.png)
 
 
