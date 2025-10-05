@@ -1,44 +1,43 @@
 # Mockups e Interfaces
 
 ## SPLASH SCREEN
-![SPLASH SCREEN](../docs/mockups/SPLASHSCREEN.png)
+<img src="../docs/mockups/SPLASHSCREEN.png" alt="SPLASH SCREEN" width="250"/>
 
 ## LOGIN
-![LOGIN](../docs/mockups/LOGIN.png)
+<img src="../docs/mockups/LOGIN.png" alt="LOGIN" width="250"/>
 
 ## CRIAR-CONTA
-![CRIAR CONTA](../docs/mockups/CRIARCONTA.png)
+<img src="../docs/mockups/CRIARCONTA.png" alt="CRIAR CONTA" width="250"/>
 
 ## WELCOME-SCREEN
-![WELCOME SCREEN](../docs/mockups/WELCOMESCREEN.png)
+<img src="../docs/mockups/WELCOMESCREEN.png" alt="WELCOME SCREEN" width="250"/>
 
 ## Dashboard
-![DASHBOARD](../docs/mockups/DASHBOARD.png)
+<img src="../docs/mockups/DASHBOARD.png" alt="DASHBOARD" width="250"/>
 
 ## USUARIO
-![USUARIO](../docs/mockups/USUARIO.png)
+<img src="../docs/mockups/USUARIO.png" alt="USUARIO" width="250"/>
 
 ## PROXIMAS SESSÕES
-![PROXIMA SESSAO](../docs/mockups/PROXIMASSESSÕES.png)
+<img src="../docs/mockups/PROXIMASSESSÕES.png" alt="PROXIMAS SESSÕES" width="250"/>
 
 ## SESSÕES PASSADAS
-![SESSOES PASSADAS](../docs/mockups/SESSÕESPASSADAS.png)
+<img src="../docs/mockups/SESSÕESPASSADAS.png" alt="SESSÕES PASSADAS" width="250"/>
 
 ## INFORMAÇÕES TUTOR
-![INFORMACOES TUTOR](../docs/mockups/INFORMAÇÕESTUTOR.png)
+<img src="../docs/mockups/INFORMAÇÕESTUTOR.png" alt="INFORMAÇÕES TUTOR" width="250"/>
 
 ## AGENDAR SESSÃO
-![AGENDAR SESSAO](../docs/mockups/AGENDARSESSÃO.png)
+<img src="../docs/mockups/AGENDARSESSÃO.png" alt="AGENDAR SESSÃO" width="250"/>
 
 ## MINHAS SESSÕES
-![MINHAS SESSOES](../docs/mockups/MINHASSESSÕES.png)
+<img src="../docs/mockups/MINHASSESSÕES.png" alt="MINHAS SESSÕES" width="250"/>
 
 ## VIDEO CHAMADA
-![VIDEO CHAMADA](../docs/mockups/VIDEOCHAMADA.png)
+<img src="../docs/mockups/VIDEOCHAMADA.png" alt="VIDEO CHAMADA" width="250"/>
 
 ## PROCURAR
-![PROCURAR](../docs/mockups/PROCURAR.png)
+<img src="../docs/mockups/PROCURAR.png" alt="PROCURAR" width="250"/>
 
 ## SESSÃO TERMINADA
-![SESSÃO TERMINADA](../docs/mockups/SESSÃOTERMINADA.png)
-
+<img src="../docs/mockups/SESSÃOTERMINADA.png" alt="SESSÃO TERMINADA" width="250"/>
