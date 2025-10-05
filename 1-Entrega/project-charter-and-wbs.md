@@ -62,9 +62,10 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 # Stakeholders
 
 ### Equipa do Projeto
-- Yassin Mac‑Arthur  
-- Francisco Baptista  
-- Francisco Silva  
+- Francisco Baptista
+- Francisco Silva
+- Nayuka Jasmin
+- Yassin Mac-Arthur
 
 ### Docentes Envolvidos
 - Pedro Rosa  
@@ -88,15 +89,16 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 # Work Breakdown Structure (WBS)
 
 ## 1. Gestão do Projeto
-- Organização do trabalho em ClickUp — *Yassin Mac‑Arthur*  
-- Estruturação do repositório e relatório — *Yassin Mac‑Arthur*  
-- Planeamento e gráfico de Gantt — *Yassin Mac‑Arthur*  
+- Organização do trabalho em ClickUp — Todos  
+- Casos de utilização — Francisco Baptista  
+- Estruturação do repositório (GitHub) — Yassin Mac‑Arthur  
+- Relatório final — Yassin Mac‑Arthur  
 
 ## 2. Design e Documentação
-- Mockups no Figma e organização por pastas — *Francisco Silva*  
-- Criação do poster — *Francisco Silva*  
-- Documentação em Markdown — *Yassin Mac‑Arthur*  
+- Criação do poster — Francisco Silva  
+- Planeamento e Gantt — Nayuka Jasmin  
+- Modelo de domínio — Yassin Mac‑Arthur  
 
 ## 3. Desenvolvimento Técnico
-- Modelo de domínio visual — *Yassin Mac‑Arthur*  
-- Estruturação dos ficheiros e pastas no GitHub — *Yassin Mac‑Arthur*
+- Mockups e interfaces (UI/UX) — Francisco Baptista  
+
