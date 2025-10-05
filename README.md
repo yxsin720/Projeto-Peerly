@@ -7,16 +7,16 @@ Através de perfis personalizados, os utilizadores podem encontrar colegas, agen
 ---
 
 ## Estrutura da Entrega
-1. [Proposta Inicial](./proposta-inicial.md)  
-2. [Enquadramento](./enquadramento.md)  
-3. [Requisitos Funcionais e Não Funcionais](./requisitos-funcionais-nao-funcionais.md)  
-4. [Casos de Uso](./casos-de-uso.md)  
-5. [Modelo de Domínio](./modelo-de-dominio.md)  
-6. [Project Charter and WBS](./project-charter-and-wbs.md)  
-7. [Guiões de Testes](./guiao-de-testes.md)  
-8. [Mockups e Interfaces](./mockups-e-wirefres.md)  
-9. [Gráfico de Gantt](./grafico-quant.md)  
-10. [Poster](./poste.md)
+1. [Proposta Inicial](./1-Entrega/proposta-inicial.md)  
+2. [Enquadramento](./1-Entrega/enquadramento.md)  
+3. [Requisitos Funcionais e Não Funcionais](./1-Entrega/requisitos-funcionais-nao-funcionais.md)  
+4. [Casos de Utilização](./1-Entrega/casos-de-utilizacao.md)  
+5. [Modelo de Domínio](./1-Entrega/modelo-de-dominio.md)  
+6. [Project Charter and WBS](./1-Entrega/project-charter-and-wbs.md)  
+7. [Guiões de Teste](./1-Entrega/guioes-de-teste.md)  
+8. [Mockups e Interfaces](./1-Entrega/mockups-e-interfaces.md)  
+9. [Gráfico de Gantt](./1-Entrega/grafico-gantt.md)  
+10. [Poster](./1-Entrega/poster.md)
 
 ---
 
