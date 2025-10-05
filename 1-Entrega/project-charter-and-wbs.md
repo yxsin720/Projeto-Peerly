@@ -64,7 +64,7 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 ### Equipa do Projeto
 - Francisco Baptista
 - Francisco Silva
-- Nayuka Jasmin
+- Nayuka Malebo
 - Yassin Mac-Arthur
 
 ### Docentes Envolvidos
@@ -96,7 +96,7 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 
 ## 2. Design e Documentação
 - Criação do poster — Francisco Silva  
-- Planeamento e Gantt — Nayuka Jasmin  
+- Planeamento e Gantt — Nayuka Malebo  
 - Modelo de domínio — Yassin Mac‑Arthur  
 
 ## 3. Desenvolvimento Técnico
