@@ -48,12 +48,3 @@ O modelo de domínio do Peerly representa as principais entidades do sistema e a
 - Uma **Sessão** pode gerar vários **Feedbacks**.  
 - Um **Utilizador** pode receber várias **Notificações**.  
 
----
-
-## Diagrama
-
-<p align="center">
-  <img src="../docs/diagrams/MODELODEDOMINIO.png" alt="MODELO DE DOMINIO" width="550"/>
-
-
-
