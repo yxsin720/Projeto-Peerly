@@ -46,5 +46,10 @@ O modelo de domínio do Peerly representa as principais entidades do sistema e a
 - Um **Utilizador** pode agendar várias **Sessões**.  
 - Cada **Sessão** está associada a uma única **Disciplina**.  
 - Uma **Sessão** pode gerar vários **Feedbacks**.  
-- Um **Utilizador** pode receber várias **Notificações**.  
+- Um **Utilizador**
+ode receber várias **Notificações**.
+
+  
+
+<img width="661" height="724" alt="modelo-dominio-peerly drawio" src="https://github.com/user-attachments/assets/74aeee4a-016d-471f-a507-59b75d41eab6" />
 
