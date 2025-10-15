@@ -154,4 +154,97 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 - Modelo de domínio — Yassin Mac‑Arthur  
 
 ## 3. Desenvolvimento Técnico
-- Mockups e interfaces (UI/UX) — Francisco Baptista   
+- Mockups e interfaces (UI/UX) — Francisco Baptista
+
+## Requisitos Funcionais
+
+Os requisitos funcionais definem as operações essenciais que a aplicação deverá disponibilizar aos seus utilizadores:
+
+1. **Registo e Autenticação**  
+   O sistema deve permitir a criação de contas de utilizador, a autenticação segura de credenciais e a recuperação de palavras‑passe.
+
+2. **Gestão de Perfil**  
+   O utilizador deve poder editar os seus dados pessoais, indicar áreas de interesse e atualizar elementos visuais do perfil (fotografia e descrição).
+
+3. **Emparelhamento de Utilizadores**  
+   A aplicação deve disponibilizar um mecanismo de correspondência entre estudantes e tutores, com base nas áreas de interesse previamente definidos.
+
+4. **Agendamento de Sessões**  
+   O sistema deve possibilitar a marcação de sessões de tutoria em datas e horários específicos, notificando o tutor selecionado para confirmação.
+
+5. **Comunicação**  
+   A aplicação deve suportar comunicação síncrona através de mensagens em tempo real (chat) e de chamadas de vídeo em formato básico.
+
+6. **Avaliação e Feedback**  
+   Após a conclusão de uma sessão, o utilizador deve poder avaliar a experiência (através de um sistema de classificação) e fornecer comentários qualitativos, que ficarão associados ao perfil do par.
+
+---
+
+## Requisitos Não Funcionais
+
+Os requisitos não funcionais estabelecem as propriedades de qualidade e as restrições técnicas que o sistema deverá cumprir:
+
+1. **Usabilidade**  
+   A interface deve ser intuitiva, consistente e de fácil utilização, garantindo acessibilidade a utilizadores com diferentes níveis de literacia digital.
+
+2. **Desempenho**  
+   O sistema deve assegurar tempos de resposta adequados, permitindo a troca de mensagens em tempo real com latência mínima e suportando múltiplos utilizadores em simultâneo sem degradação significativa do serviço.
+
+3. **Segurança**  
+   As credenciais dos utilizadores devem ser armazenadas de forma encriptada (hashing de palavras‑passe) e todas as comunicações entre cliente e servidor devem ocorrer através de protocolos seguros (HTTPS).
+
+4. **Compatibilidade**  
+   A aplicação deverá ser compatível com dispositivos Android recentes (versão mínima a definir pela equipa) e o backend deverá disponibilizar serviços através de uma API REST devidamente documentada.
+
+5. **Fiabilidade**  
+   O sistema deve garantir a persistência dos dados relativos a sessões agendadas. Em caso de falha de rede, deve permitir a recuperação da sessão ou o reenvio de mensagens não entregues.
+
+6. **Escalabilidade**  
+   A arquitetura da solução deve ser concebida de forma a permitir a evolução futura da plataforma, suportando um número crescente de utilizadores e a integração de novas funcionalidades sem necessidade de reestruturação completa.
+
+# Guiões de Teste
+
+---
+
+## GT1 – Criar conta na aplicação
+**Objetivo:** Validar o processo de registo de um novo utilizador.  
+**Pré-condições:** O utilizador não tem conta criada.  
+
+**Passos:**
+1. O utilizador abre a aplicação Peerly.  
+2. Seleciona a opção “Criar conta”.  
+3. Introduz nome completo, email e palavra-passe.  
+4. Confirma os dados e clica em “Registar”.  
+5. O sistema apresenta mensagem de sucesso e redireciona para o ecrã inicial.  
+
+**Resultado esperado:** Conta criada com sucesso e utilizador autenticado.
+
+---
+
+## GT2 – Agendar sessão de tutoria
+**Objetivo:** Validar o agendamento de uma sessão peer-to-peer.  
+**Pré-condições:** O utilizador tem conta ativa e está autenticado.  
+
+**Passos:**
+1. O utilizador abre a aplicação e seleciona “Encontrar tutor”.  
+2. Pesquisa por disciplina (ex.: Matemática).  
+3. Escolhe um tutor da lista e consulta o perfil.  
+4. Seleciona data e hora disponíveis.  
+5. Confirma o agendamento.  
+
+**Resultado esperado:** Sessão registada na agenda do utilizador e notificação enviada ao tutor.
+
+---
+
+## GT3 – Dar feedback após sessão
+**Objetivo:** Validar o processo de avaliação de uma sessão concluída.  
+**Pré-condições:** O utilizador participou numa sessão agendada.  
+
+**Passos:**
+1. Após a sessão, a aplicação apresenta o ecrã de feedback.  
+2. O utilizador atribui uma classificação (1 a 5 estrelas).  
+3. Opcionalmente, escreve um comentário.  
+4. Submete o feedback.  
+
+**Resultado esperado:** Feedback registado e associado ao perfil do tutor/estudante avaliado.
+
