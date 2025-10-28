@@ -14,9 +14,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
 import com.example.myapplicationpeerly4.ui.theme.WelcomeScreen
-import com.example.myapplicationpeerly4.SplashScreen
-import com.example.myapplicationpeerly4.LoginScreen
-import com.example.myapplicationpeerly4.HomeScreen
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
