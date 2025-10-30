@@ -39,7 +39,7 @@ fun LoginScreen(navController: NavController) {
     fun performLogin() {
         isLoading = true
         coroutineScope.launch {
-            delay(2000) // Simula uma chamada de API
+            delay(2000)
             isLoading = false
             navController.navigate("welcome") {
                 popUpTo("login") { inclusive = true }
@@ -80,17 +80,17 @@ fun LoginScreen(navController: NavController) {
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White.copy(alpha = 0.2f),
-                    unfocusedContainerColor = Color.White.copy(alpha = 0.2f),
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White.copy(alpha = 0.7f),
-                    focusedLeadingIconColor = Color.White,
-                    unfocusedLeadingIconColor = Color.White.copy(alpha = 0.7f),
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color(0xFF4B39EF),
+                    focusedBorderColor = Color(0xFF4B39EF),
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color(0xFF4B39EF),
+                    unfocusedLabelColor = Color.Gray,
+                    focusedLeadingIconColor = Color(0xFF4B39EF),
+                    unfocusedLeadingIconColor = Color.Gray
                 )
             )
 
@@ -106,17 +106,17 @@ fun LoginScreen(navController: NavController) {
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White.copy(alpha = 0.2f),
-                    unfocusedContainerColor = Color.White.copy(alpha = 0.2f),
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White.copy(alpha = 0.7f),
-                    focusedLeadingIconColor = Color.White,
-                    unfocusedLeadingIconColor = Color.White.copy(alpha = 0.7f),
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.Transparent,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    cursorColor = Color(0xFF4B39EF),
+                    focusedBorderColor = Color(0xFF4B39EF),
+                    unfocusedBorderColor = Color.Gray,
+                    focusedLabelColor = Color(0xFF4B39EF),
+                    unfocusedLabelColor = Color.Gray,
+                    focusedLeadingIconColor = Color(0xFF4B39EF),
+                    unfocusedLeadingIconColor = Color.Gray
                 )
             )
 
@@ -149,12 +149,18 @@ fun LoginScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Esqueceste a palavra-passe?", color = Color.White, fontSize = 12.sp, modifier = Modifier.clickable { /*...*/ })
-                Text("Não tens conta? Criar conta", color = Color.White, fontSize = 12.sp, modifier = Modifier.clickable { /*...*/ })
+                // --- CORREÇÃO AQUI ---
+                Text(
+                    text = "Não tens conta? Criar conta",
+                    color = Color.White,
+                    fontSize = 12.sp,
+                    modifier = Modifier.clickable { navController.navigate("criar_conta") }
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- ÍCONES REMOVIDOS TEMPORARIAMENTE ---
+            
             OutlinedButton(
                 onClick = { performLogin() },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
@@ -162,6 +168,13 @@ fun LoginScreen(navController: NavController) {
                 enabled = !isLoading,
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
             ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_google),
+                    contentDescription = "Google Icon",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.Unspecified
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text("Entrar com Google", color = Color.Black)
             }
 
@@ -174,6 +187,13 @@ fun LoginScreen(navController: NavController) {
                 enabled = !isLoading,
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
             ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_facebook),
+                    contentDescription = "Facebook Icon",
+                    modifier = Modifier.size(20.dp),
+                    tint = Color.Unspecified
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text("Entrar com Facebook", color = Color.Black)
             }
         }

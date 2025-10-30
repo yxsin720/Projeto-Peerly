@@ -13,7 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
-import com.example.myapplicationpeerly4.ui.theme.WelcomeScreen
+import com.example.myapplicationpeerly4.LoginScreen
+import com.example.myapplicationpeerly4.SplashScreen
+import com.example.myapplicationpeerly4.HomeScreen
+import com.example.myapplicationpeerly4.InfoTutorScreen
+import com.example.myapplicationpeerly4.AgendarSessaoScreen
+import com.example.myapplicationpeerly4.CriarContaScreen // Importa a nova tela
+import com.example.myapplicationpeerly4.UserScreen
+import com.example.myapplicationpeerly4.WelcomeScreen
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
@@ -59,8 +66,23 @@ fun AppNavigation() {
         }
 
         composable("home") {
-
             HomeScreen(navController = navController)
+        }
+
+        composable("info_tutor") {
+            InfoTutorScreen(navController = navController)
+        }
+
+        composable("agendar_sessao") {
+            AgendarSessaoScreen(navController = navController)
+        }
+
+        composable("user_profile") {
+            UserScreen(navController = navController)
+        }
+
+        composable("criar_conta") {
+            CriarContaScreen(navController = navController)
         }
     }
 }

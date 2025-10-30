@@ -36,7 +36,6 @@ val suggestedTutors = listOf(
     Tutor("Rita", "DESIGN", R.drawable.rita)
 )
 
-// --- CORREÇÃO AQUI: A função agora aceita NavController ---
 @Composable
 fun HomeScreen(navController: NavController) {
     Column(
@@ -46,11 +45,12 @@ fun HomeScreen(navController: NavController) {
             .padding(horizontal = 24.dp)
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Header(navController = navController) // Passa o navController para o cabeçalho
+        Header(navController = navController)
         Spacer(modifier = Modifier.height(32.dp))
         ActionCards()
         Spacer(modifier = Modifier.height(32.dp))
-        SuggestionsSection()
+        // Passa o NavController para a secção de sugestões
+        SuggestionsSection(navController = navController)
     }
 }
 
@@ -128,7 +128,7 @@ fun ActionCard(title: String, @DrawableRes imageResId: Int) {
 }
 
 @Composable
-fun SuggestionsSection() {
+fun SuggestionsSection(navController: NavController) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(text = "Sugestões", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
@@ -136,17 +136,18 @@ fun SuggestionsSection() {
             horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             items(suggestedTutors) { tutor ->
-                TutorSuggestion(tutor = tutor)
+                TutorSuggestion(tutor = tutor, navController = navController)
             }
         }
     }
 }
 
 @Composable
-fun TutorSuggestion(tutor: Tutor) {
+fun TutorSuggestion(tutor: Tutor, navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable { /* TODO: navController.navigate("tutor_details/${tutor.name}") */ }
+        // Ação de clique para navegar para a tela de detalhes do tutor
+        modifier = Modifier.clickable { navController.navigate("info_tutor") }
     ) {
         Image(
             painter = painterResource(id = tutor.imageResId),
