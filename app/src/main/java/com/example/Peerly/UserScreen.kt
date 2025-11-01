@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4
+package com.example.Peerly
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
+// --- IMPORT CORRIGIDO ---
+import com.example.Peerly.ui.theme.PeerlyTheme
 
 @Composable
 fun UserScreen(navController: NavController) {
@@ -38,23 +39,18 @@ fun UserScreen(navController: NavController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 1. Barra de Topo
         TopBar(navController)
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 2. Info Perfil
         ProfileInfoSection()
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 3. Estatísticas
         StatsSection()
         Spacer(modifier = Modifier.height(32.dp))
 
-        // 4. Botões de Navegação
         NavigationButtons()
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 5. Botão Editar Perfil
         EditProfileButton()
     }
 }
@@ -77,7 +73,7 @@ private fun TopBar(navController: NavController) {
 @Composable
 private fun ProfileInfoSection() {
     Image(
-        painter = painterResource(id = R.drawable.pedro), // Usar a mesma imagem de perfil
+        painter = painterResource(id = R.drawable.avatar_profile),
         contentDescription = "Avatar do Utilizador",
         modifier = Modifier.size(120.dp).clip(CircleShape)
     )
@@ -149,7 +145,8 @@ private fun EditProfileButton() {
 @Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
 @Composable
 fun UserScreenPreview() {
-    MyApplicationPeerly4Theme {
+    // --- TEMA CORRIGIDO ---
+    PeerlyTheme {
         UserScreen(rememberNavController())
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4
+package com.example.Peerly
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -24,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
+// --- IMPORT CORRIGIDO ---
+import com.example.Peerly.ui.theme.PeerlyTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -149,7 +150,6 @@ fun LoginScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Esqueceste a palavra-passe?", color = Color.White, fontSize = 12.sp, modifier = Modifier.clickable { /*...*/ })
-                // --- CORREÇÃO AQUI ---
                 Text(
                     text = "Não tens conta? Criar conta",
                     color = Color.White,
@@ -203,7 +203,8 @@ fun LoginScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    MyApplicationPeerly4Theme {
+    // --- TEMA CORRIGIDO ---
+    PeerlyTheme {
         LoginScreen(navController = rememberNavController())
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4
+package com.example.Peerly
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -25,7 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
+// --- IMPORT CORRIGIDO ---
+import com.example.Peerly.ui.theme.PeerlyTheme
 
 // --- Dados de Exemplo com Nomes Corretos ---
 data class Tutor(val name: String, val subject: String, @DrawableRes val imageResId: Int)
@@ -49,7 +50,6 @@ fun HomeScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(32.dp))
         ActionCards()
         Spacer(modifier = Modifier.height(32.dp))
-        // Passa o NavController para a secção de sugestões
         SuggestionsSection(navController = navController)
     }
 }
@@ -78,7 +78,7 @@ fun Header(navController: NavController) {
             modifier = Modifier
                 .size(48.dp)
                 .clip(CircleShape)
-                .clickable { /* TODO: navController.navigate("profile") */ }
+                .clickable { navController.navigate("user_profile") }
         )
     }
 }
@@ -146,7 +146,6 @@ fun SuggestionsSection(navController: NavController) {
 fun TutorSuggestion(tutor: Tutor, navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        // Ação de clique para navegar para a tela de detalhes do tutor
         modifier = Modifier.clickable { navController.navigate("info_tutor") }
     ) {
         Image(
@@ -165,7 +164,8 @@ fun TutorSuggestion(tutor: Tutor, navController: NavController) {
 @Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
 @Composable
 fun HomeScreenPreview() {
-    MyApplicationPeerly4Theme {
+    // --- TEMA CORRIGIDO ---
+    PeerlyTheme {
         HomeScreen(navController = rememberNavController())
     }
 }

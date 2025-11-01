@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4
+package com.example.Peerly
 
 import org.junit.Test
 

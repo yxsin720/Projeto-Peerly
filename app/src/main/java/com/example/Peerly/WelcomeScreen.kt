@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4 // --- PACOTE CORRIGIDO ---
+package com.example.Peerly
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
+// --- IMPORT CORRIGIDO ---
+import com.example.Peerly.ui.theme.PeerlyTheme
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
@@ -89,7 +90,8 @@ fun WelcomeScreen(navController: NavController) {
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreenPreview() {
-    MyApplicationPeerly4Theme {
+    // --- TEMA CORRIGIDO ---
+    PeerlyTheme {
         WelcomeScreen(navController = rememberNavController())
     }
 }

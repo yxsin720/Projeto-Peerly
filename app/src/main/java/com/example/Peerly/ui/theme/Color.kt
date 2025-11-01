@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4.ui.theme
+package com.example.Peerly.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

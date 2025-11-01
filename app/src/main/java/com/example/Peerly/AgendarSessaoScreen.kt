@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4
+package com.example.Peerly
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
+// --- IMPORT CORRIGIDO ---
+import com.example.Peerly.ui.theme.PeerlyTheme
 
 // --- Dados de Exemplo para a UI ---
 data class Day(val letter: Char, val number: String)
@@ -37,7 +38,6 @@ val availableDurations = listOf("30 min", "1h", "2h")
 
 @Composable
 fun AgendarSessaoScreen(navController: NavController) {
-    // --- Gestão de Estado ---
     var selectedDay by remember { mutableStateOf("29") }
     var selectedTime by remember { mutableStateOf("14:00") }
     var selectedDuration by remember { mutableStateOf("1h") }
@@ -57,7 +57,7 @@ fun AgendarSessaoScreen(navController: NavController) {
         TimeSelector(selectedTime) { time -> selectedTime = time }
         Spacer(modifier = Modifier.height(16.dp))
         DurationSelector(selectedDuration) { duration -> selectedDuration = duration }
-        Spacer(modifier = Modifier.weight(1f)) // Espaço flexível para empurrar para baixo
+        Spacer(modifier = Modifier.weight(1f))
         SummaryCard()
         Spacer(modifier = Modifier.height(16.dp))
         ConfirmButton()
@@ -76,7 +76,7 @@ private fun TopBar(navController: NavController) {
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "Voltar",
             tint = Color.White,
-            modifier = Modifier.clickable { navController.popBackStack() } // Navega para trás
+            modifier = Modifier.clickable { navController.popBackStack() }
         )
         Text(
             text = "Agendar Sessão",
@@ -93,14 +93,26 @@ private fun TutorHeader() {
         modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = R.drawable.rita), // Imagem da tutora
+            painter = painterResource(id = R.drawable.rita),
             contentDescription = "Avatar da Rita",
             modifier = Modifier.size(60.dp).clip(CircleShape)
         )
         Spacer(modifier = Modifier.width(16.dp))
+
         Column {
-            Text(text = "Rita Fernandes", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text(text = "Design", color = Color.White.copy(alpha = 0.8f), fontSize = 16.sp)
+            Text(
+                text = "Rita Fernandes",
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Design",
+                color = Color.White.copy(alpha = 0.8f),
+                fontSize = 16.sp,
+                modifier = Modifier.offset(y = (-2).dp)
+            )
         }
     }
 }
@@ -149,7 +161,6 @@ private fun SelectableItemsRow(items: List<String>, selectedItem: String, onItem
     ) {
         items(items) { item ->
             val isSelected = item == selectedItem
-            // Cor de fundo especial para o botão "1h" quando selecionado
             val backgroundColor = when {
                 isSelected && item == "1h" -> Color.White
                 isSelected -> Color(0xFF8A2BE2)
@@ -203,7 +214,8 @@ private fun ConfirmButton() {
 @Preview(showBackground = true)
 @Composable
 fun AgendarSessaoScreenPreview() {
-    MyApplicationPeerly4Theme {
+    // --- TEMA CORRIGIDO ---
+    PeerlyTheme {
         AgendarSessaoScreen(navController = rememberNavController())
     }
 }

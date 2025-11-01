@@ -1,6 +1,5 @@
-package com.example.myapplicationpeerly4.ui.theme
+package com.example.Peerly.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -33,8 +32,9 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+// --- NOME DO TEMA CORRIGIDO ---
 @Composable
-fun MyApplicationPeerly4Theme(
+fun PeerlyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

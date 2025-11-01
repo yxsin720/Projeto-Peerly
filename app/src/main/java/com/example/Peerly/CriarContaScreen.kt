@@ -1,4 +1,4 @@
-package com.example.myapplicationpeerly4
+package com.example.Peerly
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -24,7 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplicationpeerly4.ui.theme.MyApplicationPeerly4Theme
+// --- IMPORT CORRIGIDO ---
+import com.example.Peerly.ui.theme.PeerlyTheme
 
 @Composable
 fun CriarContaScreen(navController: NavController) {
@@ -51,13 +52,11 @@ fun CriarContaScreen(navController: NavController) {
             Image(
                 painter = painterResource(id = R.drawable.peerlylog),
                 contentDescription = "Logo Peerly",
-                modifier = Modifier.size(140.dp)
-
+                modifier = Modifier.height(40.dp)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- Campos de Texto ---
             AccountTextField(value = nome, onValueChange = { nome = it }, label = "Nome completo", icon = Icons.Default.Person)
             Spacer(modifier = Modifier.height(16.dp))
             AccountTextField(value = email, onValueChange = { email = it }, label = "Email", icon = Icons.Default.Email)
@@ -68,7 +67,6 @@ fun CriarContaScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- Botão Criar Conta ---
             Button(
                 onClick = { /* TODO: Lógica de criar conta */ },
                 modifier = Modifier.fillMaxWidth().height(50.dp),
@@ -80,7 +78,6 @@ fun CriarContaScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- Divisor "OU" ---
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Divider(modifier = Modifier.weight(1f), color = Color.White.copy(alpha = 0.3f))
                 Text(" OU ", color = Color.White.copy(alpha = 0.7f), modifier = Modifier.padding(horizontal = 8.dp))
@@ -89,14 +86,12 @@ fun CriarContaScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // --- Botões Sociais ---
             SocialButton(iconRes = R.drawable.icon_google, text = "Criar conta com Google") { /* TODO */ }
             Spacer(modifier = Modifier.height(16.dp))
             SocialButton(iconRes = R.drawable.icon_facebook, text = "Criar conta com Facebook") { /* TODO */ }
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // --- Link para Login ---
             Text(
                 text = "Já tens conta? Entrar",
                 color = Color.White,
@@ -106,7 +101,6 @@ fun CriarContaScreen(navController: NavController) {
     }
 }
 
-// Componente reutilizável para os campos de texto
 @Composable
 private fun AccountTextField(
     value: String,
@@ -130,8 +124,8 @@ private fun AccountTextField(
             focusedTextColor = Color.Black,
             unfocusedTextColor = Color.Black,
             cursorColor = Color(0xFF4B39EF),
-            focusedBorderColor = Color.Transparent, // Sem borda quando focado
-            unfocusedBorderColor = Color.Transparent, // Sem borda quando não focado
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
             focusedLabelColor = Color(0xFF4B39EF),
             unfocusedLabelColor = Color.Gray,
             focusedLeadingIconColor = Color(0xFF4B39EF),
@@ -140,7 +134,6 @@ private fun AccountTextField(
     )
 }
 
-// Componente reutilizável para os botões sociais
 @Composable
 private fun SocialButton(iconRes: Int, text: String, onClick: () -> Unit) {
     OutlinedButton(
@@ -148,7 +141,7 @@ private fun SocialButton(iconRes: Int, text: String, onClick: () -> Unit) {
         modifier = Modifier.fillMaxWidth().height(50.dp),
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White),
-        border = null // Remove a borda do OutlinedButton
+        border = null
     ) {
         Icon(
             painter = painterResource(id = iconRes),
@@ -164,7 +157,8 @@ private fun SocialButton(iconRes: Int, text: String, onClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun CriarContaScreenPreview() {
-    MyApplicationPeerly4Theme {
+    // --- TEMA CORRIGIDO ---
+    PeerlyTheme {
         CriarContaScreen(navController = rememberNavController())
     }
 }
