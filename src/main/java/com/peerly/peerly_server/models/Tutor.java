@@ -2,26 +2,46 @@
 package com.peerly.peerly_server.models;
 
 import jakarta.persistence.*;
-import java.util.UUID;
 
-@Entity @Table(name="tutors")
+@Entity
+@Table(name = "tutors")
 public class Tutor {
-  @Id
-  private String id = UUID.randomUUID().toString();
 
-  @Column(nullable=false, length=120)
-  private String name;
+    @Id
+    @Column(nullable = false, updatable = false)
+    private String id;           // Mantém String conforme já estás a usar no backend
 
-  @Column(nullable=false, length=80)
-  private String subject;
+    @Column(nullable = false)
+    private String name;
 
-  @Column(name="avatar_url", columnDefinition="TEXT")
-  private String avatarUrl; // ex: /uploads/avatars/tutors/t1.jpg
+    @Column
+    private String avatarUrl;    // URL HTTP ou file:// interno
 
-  public void setAvatarUrl(String rel) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'setAvatarUrl'");
-  }
+    public Tutor() {}
 
-  // getters/setters...
+    // -------- GETTERS --------
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    // -------- SETTERS --------
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
 }

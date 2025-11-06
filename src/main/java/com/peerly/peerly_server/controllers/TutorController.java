@@ -31,7 +31,7 @@ public class TutorController {
     if (opt.isEmpty()) return ResponseEntity.notFound().build();
 
     try {
-      // pasta física (cria se não existir)
+  
       File dir = new File("uploads/avatars/tutors");
       dir.mkdirs();
 
@@ -45,12 +45,12 @@ public class TutorController {
       file.transferTo(dest);
 
       Tutor t = opt.get();
-      // URL relativa servida pelo Spring (configura static resources)
+     
       String rel = "/uploads/avatars/tutors/" + filename;
       t.setAvatarUrl(rel);
       repo.save(t);
 
-      // URL absoluta para devolver
+     
       String base = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort();
       String absolute = base + rel;
 

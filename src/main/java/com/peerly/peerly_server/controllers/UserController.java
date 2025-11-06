@@ -5,8 +5,10 @@ import com.peerly.peerly_server.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.nio.file.*;
@@ -16,158 +18,172 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin // permite chamadas do app
+@CrossOrigin
 public class UserController {
 
-    private final UserRepository repo;
+  private final UserRepository repo;
 
-    public UserController(UserRepository repo) {
-        this.repo = repo;
+  public UserController(UserRepository repo) {
+    this.repo = repo;
+  }
+
+  /* -------- CRUD básico -------- */
+
+  @GetMapping
+  public List<User> getAll() { return repo.findAll(); }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<User> getOne(@PathVariable String id) {
+    return repo.findById(id)
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
+
+  @PostMapping
+  @Transactional
+  public ResponseEntity<?> create(@RequestBody Map<String, Object> body) {
+    String email        = asString(body.get("email"));
+    String fullName     = asString(body.get("fullName"));
+    String passwordHash = asString(body.get("passwordHash"));
+    String avatarUrl    = asString(body.get("avatarUrl"));
+    String language     = defaultOr(asString(body.get("language")), "pt");
+    String roleStr      = asString(body.get("role"));
+
+    if (isBlank(email) || isBlank(fullName) || isBlank(passwordHash)) {
+      return badRequest("Campos obrigatórios: email, fullName, passwordHash");
+    }
+    if (repo.findByEmailIgnoreCase(email).isPresent()) {
+      return conflict("Email já existe");
     }
 
-    // GET /api/users
-    @GetMapping
-    public List<User> getAll() {
-        return repo.findAll();
+    User u = new User();
+    u.setEmail(email);
+    u.setFullName(fullName);
+    u.setPasswordHash(passwordHash);
+    u.setAvatarUrl(avatarUrl);
+    u.setLanguage(language);
+
+    if (!isBlank(roleStr)) {
+      try { u.setRole(User.Role.valueOf(roleStr)); }
+      catch (IllegalArgumentException ex) {
+        return badRequest("role inválido. Use: student | tutor | both | admin");
+      }
     }
 
-    // GET /api/users/{id}
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getOne(@PathVariable String id) {
-        return repo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    User saved = repo.save(u);
+    return ResponseEntity.created(URI.create("/api/users/" + saved.getId())).body(saved);
+  }
+
+  @PostMapping("/{id}/update")
+  @Transactional
+  public ResponseEntity<?> update(@PathVariable String id, @RequestBody Map<String, Object> body) {
+    Optional<User> opt = repo.findById(id);
+    if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
+    User u = opt.get();
+
+    if (body.containsKey("email")) {
+      String newEmail = asString(body.get("email"));
+      if (isBlank(newEmail)) return badRequest("email não pode ser vazio");
+      var other = repo.findByEmailIgnoreCase(newEmail);
+      if (other.isPresent() && !other.get().getId().equals(id)) {
+        return conflict("Email já usado por outro utilizador");
+      }
+      u.setEmail(newEmail);
     }
 
-    // POST /api/users  (criar)
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody Map<String, Object> body) {
-        try {
-            String email = asString(body.get("email"));
-            String fullName = asString(body.get("fullName"));
-            if (email == null || email.isBlank() || fullName == null || fullName.isBlank()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Campos obrigatórios: email, fullName"));
-            }
+    if (body.containsKey("fullName"))     u.setFullName(asString(body.get("fullName")));
+    if (body.containsKey("passwordHash")) u.setPasswordHash(asString(body.get("passwordHash")));
+    if (body.containsKey("avatarUrl"))    u.setAvatarUrl(asString(body.get("avatarUrl")));
+    if (body.containsKey("language"))     u.setLanguage(defaultOr(asString(body.get("language")), "pt"));
 
-            if (repo.findByEmail(email).isPresent()) {
-                return ResponseEntity.status(409).body(Map.of("error", "Email já existe"));
-            }
-
-            User u = new User();
-            u.setEmail(email);
-            u.setFullName(fullName);
-            u.setPasswordHash(asString(body.get("passwordHash")));
-            u.setAvatarUrl(asString(body.get("avatarUrl")));
-            u.setLanguage(defaultOr(asString(body.get("language")), "pt"));
-
-            String roleStr = asString(body.get("role"));
-            if (roleStr != null && !roleStr.isBlank()) {
-                try {
-                    u.setRole(User.Role.valueOf(roleStr));
-                } catch (IllegalArgumentException ex) {
-                    return ResponseEntity.badRequest().body(Map.of("error", "role inválido. Use: student | tutor | both | admin"));
-                }
-            }
-
-            User saved = repo.save(u);
-            return ResponseEntity.created(URI.create("/api/users/" + saved.getId())).body(saved);
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().body(Map.of("error", ex.getMessage()));
+    if (body.containsKey("role")) {
+      String roleStr = asString(body.get("role"));
+      if (!isBlank(roleStr)) {
+        try { u.setRole(User.Role.valueOf(roleStr)); }
+        catch (IllegalArgumentException ex) {
+          return badRequest("role inválido. Use: student | tutor | both | admin");
         }
+      }
     }
 
-    // POST /api/users/{id}/update  (update parcial)
-    @PostMapping("/{id}/update")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Map<String, Object> body) {
-        Optional<User> opt = repo.findById(id);
-        if (opt.isEmpty()) return ResponseEntity.notFound().build();
+    return ResponseEntity.ok(repo.save(u));
+  }
 
-        User u = opt.get();
+  @DeleteMapping("/{id}")
+  @Transactional
+  public ResponseEntity<?> delete(@PathVariable String id) {
+    if (!repo.existsById(id)) return ResponseEntity.notFound().build();
+    repo.deleteById(id);
+    return ResponseEntity.noContent().build();
+  }
 
-        if (body.containsKey("email")) {
-            String newEmail = asString(body.get("email"));
-            if (newEmail == null || newEmail.isBlank()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "email não pode ser vazio"));
-            }
-            repo.findByEmail(newEmail).filter(x -> !x.getId().equals(id)).ifPresent(x -> {
-                throw new RuntimeException("Email já usado por outro utilizador");
-            });
-            u.setEmail(newEmail);
-        }
+  /* -------- Upload de Avatar -------- */
 
-        if (body.containsKey("fullName")) u.setFullName(asString(body.get("fullName")));
-        if (body.containsKey("passwordHash")) u.setPasswordHash(asString(body.get("passwordHash")));
-        if (body.containsKey("avatarUrl")) u.setAvatarUrl(asString(body.get("avatarUrl")));
-        if (body.containsKey("language")) u.setLanguage(defaultOr(asString(body.get("language")), "pt"));
+  @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @Transactional
+  public ResponseEntity<?> uploadAvatar(
+      @PathVariable String id,
+      @RequestParam("file") MultipartFile file,
+      HttpServletRequest request
+  ) {
+    var opt = repo.findById(id);
+    if (opt.isEmpty()) return ResponseEntity.notFound().build();
+    if (file == null || file.isEmpty()) return badRequest("Ficheiro vazio.");
 
-        if (body.containsKey("role")) {
-            String roleStr = asString(body.get("role"));
-            if (roleStr != null && !roleStr.isBlank()) {
-                try {
-                    u.setRole(User.Role.valueOf(roleStr));
-                } catch (IllegalArgumentException ex) {
-                    return ResponseEntity.badRequest().body(Map.of("error", "role inválido. Use: student | tutor | both | admin"));
-                }
-            }
-        }
+    // raiz configurável (-Dpeerly.upload-dir=...)
+    String root = System.getProperty("peerly.upload-dir", "uploads");
+    Path uploadRoot = Paths.get(root).toAbsolutePath().normalize();
+    Path avatarsDir = uploadRoot.resolve("avatars");
 
-        try {
-            User saved = repo.save(u);
-            return ResponseEntity.ok(saved);
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(409).body(Map.of("error", ex.getMessage()));
-        } catch (Exception ex) {
-            return ResponseEntity.internalServerError().body(Map.of("error", ex.getMessage()));
-        }
+    try {
+      Files.createDirectories(avatarsDir);
+
+      String ext = safeExt(file.getOriginalFilename());
+      String filename = "avatar_" + id + "_" + System.currentTimeMillis() + ext;
+
+      Path dest = avatarsDir.resolve(filename);
+      Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+
+      // URL pública coerente com o WebConfig (/files/**)
+      String publicUrl = ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("/files/avatars/")
+          .path(filename)
+          .toUriString();
+
+      User u = opt.get();
+      u.setAvatarUrl(publicUrl);
+      repo.save(u);
+
+      return ResponseEntity.ok(Map.of("avatarUrl", publicUrl));
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
     }
+  }
 
-    // DELETE /api/users/{id}
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
-        if (!repo.existsById(id)) return ResponseEntity.notFound().build();
-        repo.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+  /* -------- helpers -------- */
 
-    // >>>>> NOVO: POST /api/users/{id}/avatar (multipart) <<<<<
-    @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadAvatar(
-            @PathVariable String id,
-            @RequestParam("file") MultipartFile file,
-            HttpServletRequest request
-    ) {
-        try {
-            var opt = repo.findById(id);
-            if (opt.isEmpty()) return ResponseEntity.notFound().build();
-            if (file.isEmpty()) return ResponseEntity.badRequest().body(Map.of("error", "Ficheiro vazio."));
+  private static String asString(Object v) { return v == null ? null : String.valueOf(v); }
+  private static String defaultOr(String v, String d) { return isBlank(v) ? d : v; }
+  private static boolean isBlank(String s) { return s == null || s.isBlank(); }
 
-            // diretório base configurável (default: "uploads")
-            String root = System.getProperty("peerly.upload-dir", "uploads");
-            Path uploadRoot = Paths.get(root).toAbsolutePath().normalize();
-            Path avatarsDir = uploadRoot.resolve("avatars");
-            Files.createDirectories(avatarsDir);
+  private static String safeExt(String original) {
+    if (original == null) return ".jpg";
+    String lower = original.toLowerCase();
+    if (lower.endsWith(".png"))  return ".png";
+    if (lower.endsWith(".jpeg")) return ".jpeg";
+    if (lower.endsWith(".jpg"))  return ".jpg";
+    if (lower.endsWith(".webp")) return ".webp";
+    return ".jpg";
+  }
 
-            String original = file.getOriginalFilename();
-            String ext = (original != null && original.contains(".")) ? original.substring(original.lastIndexOf('.')) : ".jpg";
-            String filename = "avatar_" + id + "_" + System.currentTimeMillis() + ext;
+  private static ResponseEntity<Map<String, Object>> badRequest(String msg) {
+    return ResponseEntity.badRequest().body(Map.of("error", msg));
+  }
 
-            Path dest = avatarsDir.resolve(filename);
-            Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
-
-            // URL público (servido por /files/** – ver config abaixo)
-            String publicUrl = String.format("%s://%s:%d/files/avatars/%s",
-                    request.getScheme(), request.getServerName(), request.getServerPort(), filename);
-
-            User u = opt.get();
-            u.setAvatarUrl(publicUrl);
-            repo.save(u);
-
-            return ResponseEntity.ok(Map.of("avatarUrl", publicUrl));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
-        }
-    }
-
-    private static String asString(Object v) { return v == null ? null : String.valueOf(v); }
-    private static String defaultOr(String v, String d) { return (v == null || v.isBlank()) ? d : v; }
+  private static ResponseEntity<Map<String, Object>> conflict(String msg) {
+    return ResponseEntity.status(409).body(Map.of("error", msg));
+  }
 }
+

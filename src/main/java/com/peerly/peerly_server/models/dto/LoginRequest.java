@@ -4,7 +4,7 @@ public class LoginRequest {
     private String email;
     private String password;
 
-    public LoginRequest() {}                 // <- no-args obrigatório para Jackson
+    public LoginRequest() {}                 
     public LoginRequest(String email, String password) {
         this.email = email; this.password = password;
     }

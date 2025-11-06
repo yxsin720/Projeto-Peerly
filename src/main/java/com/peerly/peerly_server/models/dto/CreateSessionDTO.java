@@ -2,11 +2,11 @@ package com.peerly.peerly_server.models.dto;
 
 public class CreateSessionDTO {
     private String tutorId;
-    private String subjectId; // opcional
+    private String subjectId; 
     private String title;
     private String description;
-    private String startsAtUtc; // ex: 2025-11-01T14:00:00Z
-    private String endsAtUtc;   // ex: 2025-11-01T15:00:00Z
+    private String startsAtUtc; 
+    private String endsAtUtc;   
     private Integer maxParticipants;
 
     public String getTutorId() { return tutorId; }

@@ -10,7 +10,7 @@ public class SlotDTO {
     // ✅ Construtor vazio (obrigatório para JSON)
     public SlotDTO() {}
 
-    // ✅ Construtor usado no TutorsController (com 5 argumentos)
+  
     public SlotDTO(String id, int weekday, String startTime, String endTime, String timezone) {
         this.id = id;
         this.weekday = weekday;
@@ -19,7 +19,6 @@ public class SlotDTO {
         this.timezone = timezone;
     }
 
-    // Getters e setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
