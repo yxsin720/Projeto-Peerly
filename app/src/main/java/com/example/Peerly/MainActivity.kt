@@ -18,6 +18,7 @@ import com.example.Peerly.screens.AgendarSessaoScreen
 import com.example.Peerly.screens.CriarContaScreen
 import com.example.Peerly.screens.InfoTutorScreen
 import com.example.Peerly.screens.LoginScreen
+import com.example.Peerly.screens.NextSessionScreen   // <- IMPORT DA TUA TELA
 import com.example.Peerly.screens.UserScreen
 import com.example.Peerly.screens.WelcomeScreen
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
@@ -27,7 +28,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Barras transparentes com ícones claros
+        // Barras transparentes com ícones escuros
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Agendar sessão — agora recebe também a disciplina
+                        // Agendar sessão (recebe também a disciplina)
                         composable(
                             route = "agendar_sessao?tutorId={tutorId}&tutorName={tutorName}&tutorSubject={tutorSubject}",
                             arguments = listOf(
@@ -101,6 +102,11 @@ class MainActivity : ComponentActivity() {
                                 tutorName = tName,
                                 tutorSubject = tSubj
                             )
+                        }
+
+                        // *** Próxima Sessão (NOVA ROTA) ***
+                        composable("proxima_sessao") {
+                            NextSessionScreen(nav)
                         }
                     }
                 }

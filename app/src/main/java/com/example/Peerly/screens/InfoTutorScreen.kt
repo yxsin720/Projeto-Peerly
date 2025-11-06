@@ -50,7 +50,8 @@ fun InfoTutorScreen(
     tutorRating: Float,
     tutorReviews: Int,
     initialPhoto: String? = null,
-    onUpload: (suspend (tutorId: String, file: File) -> String)? = null
+    // ✅ agora permite retorno nulo (se upload falhar ou não devolver URL)
+    onUpload: (suspend (tutorId: String, file: File) -> String?)? = null
 ) {
     val name = tutorName ?: "Tutor(a)"
     val subject = tutorSubject ?: "Disciplina"
@@ -60,32 +61,37 @@ fun InfoTutorScreen(
     var photoUrl by remember { mutableStateOf(initialPhoto) }
     var isUploading by remember { mutableStateOf(false) }
 
+    // Carrega URL guardada (DataStore) se existir
     LaunchedEffect(tutorId) {
         if (!tutorId.isNullOrBlank()) {
             readTutorPhoto(ctx, tutorId)?.let { saved -> photoUrl = saved }
         }
     }
 
+    // Picker de imagem
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri ?: return@rememberLauncherForActivityResult
+
         if (tutorId.isNullOrBlank()) {
             photoUrl = uri.toString()
             return@rememberLauncherForActivityResult
         }
 
         scope.launch {
+            // 1) Persistir local
             val file = persistToInternal(ctx, uri, tutorId)
             val localUrl = Uri.fromFile(file).toString()
             photoUrl = localUrl
             saveTutorPhoto(ctx, tutorId, localUrl)
 
-            if (onUpload != null) {
+            // 2) Tentar upload remoto (se callback fornecido)
+            onUpload?.let { uploader ->
                 isUploading = true
                 try {
-                    val remote = onUpload(tutorId, file)
-                    if (remote.isNotBlank()) {
-                        photoUrl = remote
-                        saveTutorPhoto(ctx, tutorId, remote)
+                    val remoteUrl: String? = uploader(tutorId, file)
+                    if (!remoteUrl.isNullOrBlank()) {
+                        photoUrl = remoteUrl
+                        saveTutorPhoto(ctx, tutorId, remoteUrl)
                     }
                 } finally {
                     isUploading = false
@@ -118,6 +124,7 @@ fun InfoTutorScreen(
                 .systemBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Topbar
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -142,6 +149,7 @@ fun InfoTutorScreen(
 
             Spacer(Modifier.height(sectionGap))
 
+            // Avatar
             Box(
                 modifier = Modifier
                     .size(avatarSize)
@@ -201,6 +209,7 @@ fun InfoTutorScreen(
 
             Spacer(Modifier.weight(1f))
 
+            // Botões
             Column(modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = { /* TODO: ver todos os horários */ },
@@ -215,14 +224,13 @@ fun InfoTutorScreen(
 
                 Spacer(Modifier.height(12.dp))
 
-                // >>> Atualizado: envia id + nome + disciplina para o Agendar Sessão
                 Button(
                     onClick = {
-                        val id   = tutorId?.let { Uri.encode(it) } ?: ""
+                        val idEnc   = tutorId?.let { Uri.encode(it) } ?: ""
                         val nameEnc = Uri.encode(name)
                         val subjEnc = Uri.encode(subject)
                         navController.navigate(
-                            "agendar_sessao?tutorId=$id&tutorName=$nameEnc&tutorSubject=$subjEnc"
+                            "agendar_sessao?tutorId=$idEnc&tutorName=$nameEnc&tutorSubject=$subjEnc"
                         )
                     },
                     modifier = Modifier
@@ -268,5 +276,4 @@ private fun AvailabilitySection(
         Spacer(Modifier.height(6.dp))
         Text("Sex 14h–16h", color = Color.White.copy(alpha = 0.9f), fontSize = bodySize)
     }
-
 }

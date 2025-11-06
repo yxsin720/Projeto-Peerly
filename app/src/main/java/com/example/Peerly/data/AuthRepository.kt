@@ -34,15 +34,16 @@ class AuthRepository(
         return users.any { it.email.equals(email, ignoreCase = true) }
     }
 
-    /** ⬇️ NOVO: usa o nome correto do endpoint */
-    suspend fun uploadUserAvatar(userId: String, file: File): String {
+    /** Lê avatarUrl diretamente do UserResponse devolvido pelo backend */
+    suspend fun uploadUserAvatar(userId: String, file: File): String? {
+        if (userId.isBlank()) return null
         val body = file.asRequestBody("image/*".toMediaType())
         val part = MultipartBody.Part.createFormData("file", file.name, body)
-        val res = api.uploadUserAvatar(userId, part)   // <<-- nome certo
-        return res.avatarUrl ?: ""
+        val userResponse = api.uploadUserAvatar(userId, part)   // <- UserResponse
+        return userResponse.avatarUrl
     }
 
-    /** (opcional) upload para tutores, se fores usar */
+    /** (opcional) upload de avatar de tutor */
     suspend fun uploadTutorAvatar(tutorId: String, file: File): String {
         val body = file.asRequestBody("image/*".toMediaType())
         val part = MultipartBody.Part.createFormData("file", file.name, body)

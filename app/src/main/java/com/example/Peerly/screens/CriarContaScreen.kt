@@ -9,14 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,22 +18,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.Peerly.R
+import com.example.Peerly.data.AuthRepository
+import com.example.Peerly.session.UserSession
+import kotlinx.coroutines.launch
 
 @Composable
 fun CriarContaScreen(navController: NavController) {
+    val repo = remember { AuthRepository() }
+    val scope = rememberCoroutineScope()
+
     var nome by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirm by remember { mutableStateOf("") }
+
     var error by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(false) }
+    var createdOk by remember { mutableStateOf(false) }
 
     fun submit() {
+        error = null
         if (nome.isBlank() || email.isBlank() || password.isBlank() || confirm.isBlank()) {
             error = "Preenche todos os campos."
             return
@@ -49,8 +50,35 @@ fun CriarContaScreen(navController: NavController) {
             error = "As palavras-passe não coincidem."
             return
         }
-        loading = false
-        navController.navigate("welcome") { popUpTo("criar_conta") { inclusive = true } }
+
+        loading = true
+        scope.launch {
+            try {
+                // 1) Criar no backend (POST /api/users)
+                val created = repo.registerViaUsers(
+                    fullName = nome.trim(),
+                    email = email.trim(),
+                    password = password // backend espera em 'passwordHash'
+                )
+
+                // 2) Login imediato (POST /api/auth/login)
+                val logged = repo.login(email.trim(), password)
+
+                // 3) Guardar sessão (em memória/persistência, conforme teu UserSession)
+                UserSession.setUser(logged)
+
+                createdOk = true
+                // 4) Navegar (troca "home" se quiseres outro destino)
+                navController.navigate("home") {
+                    popUpTo("criar_conta") { inclusive = true }
+                    launchSingleTop = true
+                }
+            } catch (e: Exception) {
+                error = e.message ?: "Falha ao criar conta."
+            } finally {
+                loading = false
+            }
+        }
     }
 
     val textFieldColors = OutlinedTextFieldDefaults.colors(
@@ -70,7 +98,9 @@ fun CriarContaScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color(0xFF6C63FF), Color(0xFF4B39EF))))
+            .background(
+                Brush.verticalGradient(listOf(Color(0xFF6C63FF), Color(0xFF4B39EF)))
+            )
             .systemBarsPadding()
             .padding(horizontal = 24.dp),
         contentAlignment = Alignment.Center
@@ -80,16 +110,14 @@ fun CriarContaScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // LOGO — maior e central
             Image(
                 painter = painterResource(id = R.drawable.peerlylog),
                 contentDescription = "Peerly",
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 8.dp)
-                    .size(220.dp) // aumenta aqui se quiseres ainda maior
+                    .size(220.dp)
             )
 
-            // Campos
             OutlinedTextField(
                 value = nome, onValueChange = { nome = it },
                 label = { Text("Nome completo") },
@@ -97,6 +125,7 @@ fun CriarContaScreen(navController: NavController) {
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !loading,
                 colors = textFieldColors
             )
             OutlinedTextField(
@@ -106,6 +135,7 @@ fun CriarContaScreen(navController: NavController) {
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !loading,
                 colors = textFieldColors
             )
             OutlinedTextField(
@@ -116,6 +146,7 @@ fun CriarContaScreen(navController: NavController) {
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !loading,
                 colors = textFieldColors
             )
             OutlinedTextField(
@@ -126,27 +157,42 @@ fun CriarContaScreen(navController: NavController) {
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier.fillMaxWidth(),
+                enabled = !loading,
                 colors = textFieldColors
             )
 
-            // Erro (se houver)
             if (error != null) {
-                Text(error!!, color = Color.White, fontSize = 12.sp)
+                Text(error!!, color = Color(0xFFFFE082), fontSize = 13.sp)
+            }
+            if (createdOk) {
+                Text("Conta criada com sucesso!", color = Color.White, fontSize = 13.sp)
             }
 
-            // Botão Criar conta
             Button(
                 onClick = { if (!loading) submit() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(54.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A41B5))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4A41B5)),
+                enabled = !loading
             ) {
-                Text("Criar conta", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+                if (loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        strokeWidth = 3.dp,
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Spacer(Modifier.width(10.dp))
+                }
+                Text(
+                    if (loading) "A criar conta..." else "Criar conta",
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 16.sp
+                )
             }
 
-            // OU com barras
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -169,14 +215,14 @@ fun CriarContaScreen(navController: NavController) {
                 )
             }
 
-            // Google
             OutlinedButton(
-                onClick = { /* TODO: Google SignUp */ },
+                onClick = { /* Google SignUp (futuro) */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White),
+                enabled = !loading
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
@@ -189,14 +235,14 @@ fun CriarContaScreen(navController: NavController) {
                 }
             }
 
-            // Facebook
             OutlinedButton(
-                onClick = { /* TODO: Facebook SignUp */ },
+                onClick = { /* Facebook SignUp (futuro) */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+                colors = ButtonDefaults.outlinedButtonColors(containerColor = Color.White),
+                enabled = !loading
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
@@ -211,11 +257,10 @@ fun CriarContaScreen(navController: NavController) {
 
             Spacer(Modifier.height(4.dp))
 
-            // Link para Entrar
             Text(
                 text = "Já tens conta? Entrar",
                 color = Color.White,
-                modifier = Modifier.clickable { navController.popBackStack() }
+                modifier = Modifier.clickable(enabled = !loading) { navController.popBackStack() }
             )
 
             Spacer(Modifier.height(8.dp))

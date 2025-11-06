@@ -9,13 +9,33 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,15 +58,15 @@ import com.example.Peerly.R
 import com.example.Peerly.data.TutorRepository
 import com.example.Peerly.data.readTutorPhoto
 import com.example.Peerly.data.saveTutorPhoto
-import com.example.Peerly.screens.CriarContaScreen
 import com.example.Peerly.session.UserSession
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
+// ----------------- modelos e seed -----------------
 
 data class Tutor(
     val id: String,
@@ -57,7 +77,6 @@ data class Tutor(
     val reviews: Int,
     @DrawableRes val imageResId: Int
 )
-
 
 private val seedTutors = listOf(
     Tutor(
@@ -89,6 +108,7 @@ private val seedTutors = listOf(
     )
 )
 
+// ----------------- HomeScreen -----------------
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -98,9 +118,9 @@ fun HomeScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-
+    // idTutor -> url/uri da foto
     val photoMap = remember { mutableStateMapOf<String, String>() }
-
+    // idTutor -> está a fazer upload?
     val uploading = remember { mutableStateMapOf<String, Boolean>() }
 
     suspend fun loadPersistedPhotos() {
@@ -110,9 +130,7 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-
     LaunchedEffect(Unit) { loadPersistedPhotos() }
-
 
     DisposableEffect(lifecycleOwner) {
         val obs = LifecycleEventObserver { _, event ->
@@ -124,11 +142,12 @@ fun HomeScreen(navController: NavController) {
         onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
     }
 
-    Column(
+    androidx.compose.foundation.layout.Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF5C54ED))
             .padding(horizontal = 24.dp, vertical = 16.dp)
+            .navigationBarsPadding()
     ) {
         Header(displayName = displayName, navController = navController)
 
@@ -144,15 +163,15 @@ fun HomeScreen(navController: NavController) {
                 scope.launch {
                     uploading[tutor.id] = true
                     try {
-
+                        // 1) Copia local e persiste
                         val file = copyUriToInternal(ctx, pickedUri, "tutor_${tutor.id}.jpg")
                         val localUri = Uri.fromFile(file).toString()
                         photoMap[tutor.id] = localUri
                         saveTutorPhoto(ctx, tutor.id, localUri)
 
-                        // 2) Upload para servidor. Se devolver URL http(s), substituir + persistir
+                        // 2) Upload opcional (ex.: servidor). Se devolver URL http(s), substituir + persistir
                         val remoteUrl = repo.uploadAvatar(tutor.id, file)
-                        if (remoteUrl.isNotBlank()) {
+                        if (remoteUrl?.isNotBlank() == true) {
                             photoMap[tutor.id] = remoteUrl
                             saveTutorPhoto(ctx, tutor.id, remoteUrl)
                         }
@@ -162,14 +181,14 @@ fun HomeScreen(navController: NavController) {
                 }
             },
             onOpen = { tutor ->
-
-                val idE      = Uri.encode(tutor.id)
-                val nameE    = Uri.encode(tutor.name)
+                val idE = Uri.encode(tutor.id)
+                val nameE = Uri.encode(tutor.name)
                 val subjectE = Uri.encode(tutor.subject)
-                val descE    = Uri.encode(tutor.description)
-                val ratingS  = tutor.rating.toString()
+                val descE = Uri.encode(tutor.description)
+                val ratingS = tutor.rating.toString()
                 val reviewsS = tutor.reviews.toString()
 
+                // Vai para InfoTutorScreen (mantém compatível com as tuas rotas atuais)
                 navController.navigate(
                     "info_tutor/$idE/$nameE?subject=$subjectE&desc=$descE&rating=$ratingS&reviews=$reviewsS"
                 )
@@ -178,6 +197,7 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
+// ----------------- Header -----------------
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -189,7 +209,7 @@ private fun Header(displayName: String, navController: NavController) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
             Image(
                 painter = painterResource(id = R.drawable.peerlylog),
                 contentDescription = "Logo Peerly",
@@ -222,13 +242,14 @@ private fun Header(displayName: String, navController: NavController) {
                 .clip(CircleShape)
                 .combinedClickable(
                     onClick = { navController.navigate("user") },
-                    onLongClick = { /* futuro: editar tua própria foto */ }
+                    onLongClick = { /* futuro: editar a tua própria foto */ }
                 ),
             contentScale = ContentScale.Crop
         )
     }
 }
 
+// ----------------- Cards “Ações” -----------------
 
 @Composable
 private fun ActionCards() {
@@ -261,7 +282,7 @@ private fun ActionCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
-        Column(
+        androidx.compose.foundation.layout.Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
@@ -291,6 +312,7 @@ private fun ActionCard(
     }
 }
 
+// ----------------- Sugestões de tutores -----------------
 
 @Composable
 private fun SuggestionsSection(
@@ -300,7 +322,7 @@ private fun SuggestionsSection(
     onPickLocal: (Tutor, Uri) -> Unit,
     onOpen: (Tutor) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxWidth()) {
+    androidx.compose.foundation.layout.Column(modifier = Modifier.fillMaxWidth()) {
         Text("Sugestões", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(16.dp))
 
@@ -334,7 +356,7 @@ private fun TutorCard(
         ActivityResultContracts.GetContent()
     ) { uri -> uri?.let(onPick) }
 
-    Column(
+    androidx.compose.foundation.layout.Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.width(120.dp)
     ) {
@@ -381,11 +403,18 @@ private fun TutorCard(
         }
 
         Spacer(Modifier.height(10.dp))
-        Text(tutor.name.uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp, lineHeight = 16.sp)
+        Text(
+            tutor.name.uppercase(),
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp,
+            lineHeight = 16.sp
+        )
         Text(tutor.subject, color = Color.White.copy(alpha = 0.75f), fontSize = 12.sp)
     }
 }
 
+// ----------------- util -----------------
 
 private suspend fun copyUriToInternal(ctx: Context, uri: Uri, fileName: String): File =
     withContext(Dispatchers.IO) {
@@ -395,13 +424,14 @@ private suspend fun copyUriToInternal(ctx: Context, uri: Uri, fileName: String):
             FileOutputStream(file).use { output -> input.copyTo(output) }
         }
         file
-
     }
+
+// ----------------- preview -----------------
+
 @Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
 @Composable
-private fun HomeScreenScreenPreview() {
+private fun HomeScreenPreview() {
     MyApplicationPeerly4Theme {
         HomeScreen(navController = rememberNavController())
     }
-
 }

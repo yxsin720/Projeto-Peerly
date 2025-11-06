@@ -1,5 +1,6 @@
 package com.example.Peerly.screens
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -31,7 +32,13 @@ import com.example.Peerly.R
 import com.example.Peerly.data.readTutorPhoto
 import com.example.Peerly.scheduling.TimeWindow
 import com.example.Peerly.scheduling.availableTimesFor
-import java.time.*
+import com.example.Peerly.sessions.SessionRepository
+import com.example.Peerly.sessions.SessionUi
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -41,35 +48,34 @@ fun AgendarSessaoScreen(
     navController: NavController,
     tutorId: String? = null,
     tutorName: String? = null,
-    tutorSubject: String? = "Design",         // << NOVO: vem da navegação
+    tutorSubject: String? = "Design",
 ) {
     val ctx = LocalContext.current
     val zone = remember { ZoneId.of("Europe/Lisbon") }
     val locale = remember { Locale("pt", "PT") }
 
-    // Foto do tutor (se guardada no DataStore)
+    // Foto do tutor (persistida) — vamos reutilizar como avatarUrl da sessão
     var tutorPhoto by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(tutorId) {
         if (!tutorId.isNullOrBlank()) tutorPhoto = readTutorPhoto(ctx, tutorId)
     }
 
-    // Data / horários
-    var selectedDate by remember { mutableStateOf(LocalDate.now(zone)) }
+    // Estado: data / hora / duração
+    var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now(zone)) }
     val blocked = remember(selectedDate) {
         if (selectedDate.dayOfWeek == DayOfWeek.SATURDAY || selectedDate.dayOfWeek == DayOfWeek.SUNDAY)
             emptyList()
         else listOf(TimeWindow(LocalTime.of(12, 0), LocalTime.of(13, 0)))
     }
     var times by remember(selectedDate) { mutableStateOf(availableTimesFor(selectedDate, zone, blocked)) }
-    var selectedTime by remember(times) { mutableStateOf(times.firstOrNull()) }
+    var selectedTime by rememberSaveable(times) { mutableStateOf(times.firstOrNull()) }
     LaunchedEffect(selectedDate) {
         times = availableTimesFor(selectedDate, zone, blocked)
         selectedTime = times.firstOrNull()
     }
 
     val durations = listOf("30 min", "1h", "2h")
-    var selectedDuration by remember { mutableStateOf("1h") }
-
+    var selectedDuration by rememberSaveable { mutableStateOf("1h") }
     val summaryFmt = remember { DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM yyyy", locale) }
 
     Column(
@@ -81,17 +87,12 @@ fun AgendarSessaoScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Topbar
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Voltar",
                 tint = Color.White,
-                modifier = Modifier
-                    .size(28.dp)
-                    .clickable { navController.popBackStack() }
+                modifier = Modifier.size(28.dp).clickable { navController.popBackStack() }
             )
             Spacer(Modifier.width(8.dp))
             Text("Agendar Sessão", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -99,22 +100,14 @@ fun AgendarSessaoScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        // Tutor header (foto + nome + disciplina)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        // Header do tutor (mostra a foto se tivermos URL)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val avatar = Modifier.size(72.dp).clip(CircleShape)
             if (!tutorPhoto.isNullOrBlank()) {
                 AsyncImage(model = tutorPhoto, contentDescription = null, modifier = avatar)
             } else {
-                val fallback = when (tutorId) {
-                    "tutor_pedro" -> R.drawable.pedro
-                    "tutor_erica" -> R.drawable.erica
-                    "tutor_rita"  -> R.drawable.rita
-                    else -> R.drawable.rita
-                }
-                Image(painterResource(fallback), contentDescription = null, modifier = avatar)
+                // fallback apenas visual (não será usado para a sessão)
+                Image(painterResource(R.drawable.rita), contentDescription = null, modifier = avatar)
             }
             Spacer(Modifier.width(16.dp))
             Column {
@@ -125,7 +118,6 @@ fun AgendarSessaoScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        // Calendário horizontal com snap
         CalendarScroller(
             selected = selectedDate,
             onSelect = { selectedDate = it },
@@ -134,18 +126,13 @@ fun AgendarSessaoScreen(
         )
 
         Spacer(Modifier.height(18.dp))
-
-        // Horas (chips)
         TimeChips(times, selectedTime) { selectedTime = it }
-
         Spacer(Modifier.height(16.dp))
-
-        // Duração (chips)
         DurationChips(durations, selectedDuration) { selectedDuration = it }
 
         Spacer(Modifier.weight(1f))
 
-        // Bloco “flutuante” — afastado da gesture bar
+        // Resumo + Confirmar
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -164,13 +151,42 @@ fun AgendarSessaoScreen(
                 }
             )
             Spacer(Modifier.height(10.dp))
-            ConfirmButton(enabled = selectedTime != null) { /* TODO confirmar */ }
+            ConfirmButton(enabled = selectedTime != null) {
+                val timeStr = selectedTime ?: return@ConfirmButton
+                val parsedTime = runCatching { LocalTime.parse(timeStr) }.getOrNull()
+                    ?: return@ConfirmButton
+
+                val start = LocalDateTime.of(selectedDate, parsedTime)
+                val minutes = when (selectedDuration) {
+                    "30 min" -> 30
+                    "1h"     -> 60
+                    else     -> 120
+                }
+                val end = start.plusMinutes(minutes.toLong())
+
+                // Cria a sessão local com avatarUrl = tutorPhoto
+                SessionRepository.add(
+                    SessionUi(
+                        tutorId   = tutorId,
+                        tutorName = tutorName ?: "Tutor(a)",
+                        subject   = tutorSubject ?: "-",
+                        start     = start,
+                        end       = end,
+                        avatarUrl = tutorPhoto // << importante: URL da foto
+                    )
+                )
+
+                // Navega para o ecrã de Próxima Sessão (sem popUpTo para não falhar por query params)
+                navController.navigate("proxima_sessao") {
+                    launchSingleTop = true
+                }
+            }
         }
     }
 }
 
 /* ---------- Calendário (LazyRow + snap) ---------- */
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CalendarScroller(
     selected: LocalDate,
@@ -182,16 +198,11 @@ private fun CalendarScroller(
     val start = remember { today.minusDays(30) }
     val end   = remember { today.plusDays(180) }
     val days = remember(start, end) {
-        generateSequence(start) { it.plusDays(1) }
-            .takeWhile { !it.isAfter(end) }
-            .toList()
+        generateSequence(start) { it.plusDays(1) }.takeWhile { !it.isAfter(end) }.toList()
     }
 
-    // Cabeçalho S T Q Q S S D
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 6.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 6.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         DayOfWeek.values().forEach { dow ->
@@ -219,9 +230,7 @@ private fun CalendarScroller(
             val pillText = if (isSel) Color(0xFF5C54ED) else Color.White
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .width(44.dp)
-                    .clickable { onSelect(day) }
+                modifier = Modifier.width(44.dp).clickable { onSelect(day) }
             ) {
                 Box(
                     modifier = Modifier
@@ -257,33 +266,21 @@ private fun TimeChips(
     val fmtTimes = remember(times) {
         times.map { t ->
             runCatching {
-                val (h, m) = t.split(":")
-                "%02d:%02d".format(h.toInt(), m.toInt())
+                val (h, m) = t.split(":"); "%02d:%02d".format(h.toInt(), m.toInt())
             }.getOrElse { t }
         }
     }
 
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(horizontal = 6.dp)
-    ) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(horizontal = 6.dp)) {
         items(fmtTimes) { item ->
             val sel = item == selected
             val bg = if (sel) Color.White else Color(0xFF7A6BFF)
             val fg = if (sel) Color(0xFF141414) else Color.White
             Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(bg)
-                    .clickable { onSelect(item) }
+                modifier = Modifier.clip(RoundedCornerShape(18.dp)).background(bg).clickable { onSelect(item) }
             ) {
-                Text(
-                    text = item,
-                    color = fg,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
-                )
+                Text(item, color = fg, fontWeight = FontWeight.Bold, fontSize = 18.sp,
+                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp))
             }
         }
     }
@@ -295,27 +292,16 @@ private fun DurationChips(
     selected: String,
     onSelect: (String) -> Unit
 ) {
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(horizontal = 6.dp)
-    ) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp), contentPadding = PaddingValues(horizontal = 6.dp)) {
         items(durations) { d ->
             val sel = d == selected
             val bg = if (sel) Color.White else Color(0xFF7A6BFF).copy(alpha = 0.85f)
             val fg = if (sel) Color(0xFF141414) else Color.White
             Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(18.dp))
-                    .background(bg)
-                    .clickable { onSelect(d) }
+                modifier = Modifier.clip(RoundedCornerShape(18.dp)).background(bg).clickable { onSelect(d) }
             ) {
-                Text(
-                    text = d,
-                    color = fg,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)
-                )
+                Text(d, color = fg, fontWeight = FontWeight.Bold, fontSize = 18.sp,
+                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp))
             }
         }
     }
@@ -344,14 +330,11 @@ private fun ConfirmButton(enabled: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(52.dp),
+        modifier = Modifier.fillMaxWidth().height(52.dp),
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
     ) {
         Text("Confirmar sessão", color = Color(0xFF141414), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
     }
-
 }

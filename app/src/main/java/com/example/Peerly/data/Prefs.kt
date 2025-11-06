@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore by preferencesDataStore(name = "peerly_prefs")
 
-suspend fun saveTutorPhoto(ctx: Context, tutorId: String, url: String) {
+suspend fun saveTutorPhoto(ctx: Context, tutorId: String, url: String?) {
     val key = stringPreferencesKey("tutor_photo_$tutorId")
-    ctx.dataStore.edit { it[key] = url }
+    ctx.dataStore.edit { it[key] = url as String }
 }
 
 suspend fun readTutorPhoto(ctx: Context, tutorId: String): String? {

@@ -7,14 +7,13 @@ data class UserResponse(
     @Json(name = "email")     val email: String?,
     @Json(name = "fullName")  val fullName: String?,
     @Json(name = "role")      val role: String?,
-    @Json(name = "avatarUrl") val avatarUrl: String? = null   // <-- adiciona (opcional)
+    @Json(name = "avatarUrl") val avatarUrl: String?
 )
 
-// Mapeia para o modelo de domínio usado no app
 fun UserResponse.toDomain(): User = User(
-    id = id,
-    email = email,
-    fullName = fullName,
-    role = role,
-    avatarUrl = avatarUrl     // <-- passa adiante
+    id = id.orEmpty(),
+    email = email.orEmpty(),
+    fullName = fullName.orEmpty(),
+    role = role.orEmpty(),
+    avatarUrl = avatarUrl.orEmpty()
 )
