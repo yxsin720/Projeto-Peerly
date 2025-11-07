@@ -1,12 +1,16 @@
+// controllers/SessionController.java
 package com.peerly.peerly_server.controllers;
 
 import com.peerly.peerly_server.models.Session;
-import com.peerly.peerly_server.models.Tutor;
+import com.peerly.peerly_server.models.SessionParticipant;
 import com.peerly.peerly_server.models.dto.CreateSessionRequest;
 import com.peerly.peerly_server.models.dto.SessionDto;
 import com.peerly.peerly_server.models.dto.TutorSlimDto;
+import com.peerly.peerly_server.repositories.SessionParticipantRepository;
 import com.peerly.peerly_server.repositories.TutorRepository;
 import com.peerly.peerly_server.services.SessionService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
@@ -14,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/sessions")
+@RequestMapping("/api/sessions") // <- prefixo igual ao resto da API
 @CrossOrigin
 public class SessionController {
 
@@ -22,14 +26,33 @@ public class SessionController {
 
   private final SessionService service;
   private final TutorRepository tutorRepo;
+  private final SessionParticipantRepository participants;
 
-  public SessionController(SessionService service, TutorRepository tutorRepo) {
+  public SessionController(SessionService service,
+                           TutorRepository tutorRepo,
+                           SessionParticipantRepository participants) {
     this.service = service;
     this.tutorRepo = tutorRepo;
+    this.participants = participants;
   }
 
   @PostMapping
-  public SessionDto create(@RequestBody CreateSessionRequest data) {
+  @Transactional
+  public ResponseEntity<?> create(@RequestBody CreateSessionRequest data) {
+    if (data == null
+        || data.tutorId() == null || data.tutorId().isBlank()
+        || data.title() == null || data.title().isBlank()
+        || data.startsAt() == null
+        || data.endsAt() == null) {
+      return ResponseEntity.badRequest().body(Map.of(
+          "error", "Campos obrigatórios: tutorId, title, startsAt, endsAt (LocalDateTime)."
+      ));
+    }
+    if (data.endsAt().isBefore(data.startsAt())) {
+      return ResponseEntity.badRequest().body(Map.of("error", "endsAt deve ser depois de startsAt"));
+    }
+
+    // cria a sessão
     Session s = new Session();
     s.setId(UUID.randomUUID().toString());
     s.setTutorId(data.tutorId());
@@ -43,31 +66,36 @@ public class SessionController {
     s.setStatus("scheduled");
 
     Session saved = service.create(s);
-    Tutor t = saved.getTutorId() != null ? tutorRepo.findById(saved.getTutorId()).orElse(null) : null;
-    return toDto(saved, t);
+
+    // opcional: associa o aluno que agendou
+    if (data.studentId() != null && !data.studentId().isBlank()) {
+      if (!participants.existsBySessionIdAndUserId(saved.getId(), data.studentId())) {
+        SessionParticipant sp = new SessionParticipant();
+        sp.setSessionId(saved.getId());
+        sp.setUserId(data.studentId());
+        participants.save(sp);
+      }
+    }
+
+    return ResponseEntity.ok(toDto(saved));
   }
 
   @GetMapping
   public List<SessionDto> list() {
     List<Session> sessions = service.findAll();
-    Set<String> tutorIds = sessions.stream()
-        .map(Session::getTutorId).filter(Objects::nonNull).collect(Collectors.toSet());
-
-    Map<String, Tutor> tutors = new HashMap<>();
-    tutorRepo.findAllById(tutorIds).forEach(t -> tutors.put(t.getId(), t));
-
-    return sessions.stream().map(s -> toDto(s, tutors.get(s.getTutorId()))).toList();
+    return sessions.stream().map(this::toDto).toList();
   }
 
   @GetMapping("/{id}")
-  public SessionDto get(@PathVariable String id) {
-    Session s = service.findById(id).orElseThrow();
-    Tutor t = s.getTutorId() != null ? tutorRepo.findById(s.getTutorId()).orElse(null) : null;
-    return toDto(s, t);
+  public ResponseEntity<?> get(@PathVariable String id) {
+    return service.findById(id)
+        .<ResponseEntity<?>>map(s -> ResponseEntity.ok(toDto(s)))
+        .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  private SessionDto toDto(Session s, Tutor t) {
-    SessionDto dto = new SessionDto();
+  /* helper: mapeia para DTO enriquecido com info do tutor */
+  private SessionDto toDto(Session s) {
+    var dto = new SessionDto();
     dto.setId(s.getId());
     dto.setTutorId(s.getTutorId());
     dto.setSubjectId(s.getSubjectId());
@@ -79,7 +107,11 @@ public class SessionController {
     dto.setStatus(s.getStatus());
     dto.setMaxParticipants(s.getMaxParticipants());
     dto.setPriceTotalCents(s.getPriceTotalCents());
-    if (t != null) dto.setTutor(new TutorSlimDto(t.getId(), t.getName(), t.getAvatarUrl()));
+
+    if (s.getTutorId() != null) {
+      tutorRepo.findById(s.getTutorId()).ifPresent(t ->
+          dto.setTutor(new TutorSlimDto(t.getId(), t.getName(), t.getAvatarUrl())));
+    }
     return dto;
   }
 }
