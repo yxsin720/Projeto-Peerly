@@ -1,3 +1,4 @@
+// app/src/main/java/com/example/Peerly/MainActivity.kt
 package com.example.Peerly
 
 import android.graphics.Color
@@ -18,9 +19,11 @@ import com.example.Peerly.screens.AgendarSessaoScreen
 import com.example.Peerly.screens.CriarContaScreen
 import com.example.Peerly.screens.InfoTutorScreen
 import com.example.Peerly.screens.LoginScreen
-import com.example.Peerly.screens.NextSessionScreen   // <- IMPORT DA TUA TELA
+import com.example.Peerly.screens.NextSessionScreen
+import com.example.Peerly.screens.SplashScreen
 import com.example.Peerly.screens.UserScreen
 import com.example.Peerly.screens.WelcomeScreen
+import com.example.Peerly.session.UserSession
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import com.example.myapplicationpeerly4.screens.HomeScreen
 
@@ -28,7 +31,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Barras transparentes com ícones escuros
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
@@ -41,7 +43,22 @@ class MainActivity : ComponentActivity() {
                     val nav = rememberNavController()
                     val tutorRepo = TutorRepository()
 
-                    NavHost(navController = nav, startDestination = "login") {
+                    NavHost(
+                        navController = nav,
+                        startDestination = "splash" // <<--- começa no Splash
+                    ) {
+                        /* SPLASH decide o próximo destino */
+                        composable("splash") {
+                            SplashScreen(
+                                // passa um callback simples para navegar
+                                onFinish = {
+                                    val isLogged = UserSession.currentUser != null
+                                    nav.navigate(if (isLogged) "welcome" else "login") {
+                                        popUpTo("splash") { inclusive = true } // remove splash da pilha
+                                    }
+                                }
+                            )
+                        }
 
                         composable("login")       { LoginScreen(nav) }
                         composable("welcome")     { WelcomeScreen(nav) }
@@ -83,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Agendar sessão (recebe também a disciplina)
+                        // Agendar sessão
                         composable(
                             route = "agendar_sessao?tutorId={tutorId}&tutorName={tutorName}&tutorSubject={tutorSubject}",
                             arguments = listOf(
@@ -104,7 +121,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // *** Próxima Sessão (NOVA ROTA) ***
+                        // Próxima sessão
                         composable("proxima_sessao") {
                             NextSessionScreen(nav)
                         }
