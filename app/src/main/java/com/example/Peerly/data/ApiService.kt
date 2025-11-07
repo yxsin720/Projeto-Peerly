@@ -13,13 +13,12 @@ import retrofit2.http.Path
 
 interface ApiService {
 
-    /* ------------------------ AUTH ------------------------ */
+
 
     @POST("api/auth/login")
     suspend fun login(@Body body: LoginRequest): UserResponse
 
 
-    /* ------------------------ USERS ------------------------ */
 
     @GET("api/users")
     suspend fun getUsers(): List<UserResponse>
@@ -27,7 +26,7 @@ interface ApiService {
     @POST("api/users")
     suspend fun createUser(@Body body: UserCreateRequest): UserResponse
 
-    /** Upload do avatar do UTILIZADOR – devolve o UserResponse atualizado */
+
     @Multipart
     @POST("api/users/{id}/avatar")
     suspend fun uploadUserAvatar(
@@ -36,9 +35,9 @@ interface ApiService {
     ): UserResponse
 
 
-    /* ------------------------ TUTORS ------------------------ */
 
-    /** Upload do avatar da TUTORA – backend devolve { "avatarUrl": "…" } */
+
+
     @Multipart
     @POST("api/tutors/{id}/avatar")
     suspend fun uploadTutorAvatar(

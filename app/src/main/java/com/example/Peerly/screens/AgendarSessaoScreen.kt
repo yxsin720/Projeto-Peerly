@@ -54,13 +54,12 @@ fun AgendarSessaoScreen(
     val zone = remember { ZoneId.of("Europe/Lisbon") }
     val locale = remember { Locale("pt", "PT") }
 
-    // Foto do tutor (persistida) — vamos reutilizar como avatarUrl da sessão
-    var tutorPhoto by remember { mutableStateOf<String?>(null) }
+     var tutorPhoto by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(tutorId) {
         if (!tutorId.isNullOrBlank()) tutorPhoto = readTutorPhoto(ctx, tutorId)
     }
 
-    // Estado: data / hora / duração
+
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now(zone)) }
     val blocked = remember(selectedDate) {
         if (selectedDate.dayOfWeek == DayOfWeek.SATURDAY || selectedDate.dayOfWeek == DayOfWeek.SUNDAY)
@@ -86,7 +85,7 @@ fun AgendarSessaoScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Topbar
+
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -100,13 +99,13 @@ fun AgendarSessaoScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        // Header do tutor (mostra a foto se tivermos URL)
+
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val avatar = Modifier.size(72.dp).clip(CircleShape)
             if (!tutorPhoto.isNullOrBlank()) {
                 AsyncImage(model = tutorPhoto, contentDescription = null, modifier = avatar)
             } else {
-                // fallback apenas visual (não será usado para a sessão)
+
                 Image(painterResource(R.drawable.rita), contentDescription = null, modifier = avatar)
             }
             Spacer(Modifier.width(16.dp))
@@ -164,7 +163,7 @@ fun AgendarSessaoScreen(
                 }
                 val end = start.plusMinutes(minutes.toLong())
 
-                // Cria a sessão local com avatarUrl = tutorPhoto
+
                 SessionRepository.add(
                     SessionUi(
                         tutorId   = tutorId,
@@ -172,12 +171,11 @@ fun AgendarSessaoScreen(
                         subject   = tutorSubject ?: "-",
                         start     = start,
                         end       = end,
-                        avatarUrl = tutorPhoto // << importante: URL da foto
+                        avatarUrl = tutorPhoto
                     )
                 )
 
-                // Navega para o ecrã de Próxima Sessão (sem popUpTo para não falhar por query params)
-                navController.navigate("proxima_sessao") {
+                            navController.navigate("proxima_sessao") {
                     launchSingleTop = true
                 }
             }
@@ -185,7 +183,7 @@ fun AgendarSessaoScreen(
     }
 }
 
-/* ---------- Calendário (LazyRow + snap) ---------- */
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CalendarScroller(
@@ -251,7 +249,6 @@ private fun CalendarScroller(
     }
 }
 
-/* ---------- Chips de horas / duração ---------- */
 
 @Composable
 private fun TimeChips(
@@ -307,7 +304,6 @@ private fun DurationChips(
     }
 }
 
-/* ---------- Resumo + botão ---------- */
 
 @Composable
 private fun SummaryCard(tutorName: String, line: String) {

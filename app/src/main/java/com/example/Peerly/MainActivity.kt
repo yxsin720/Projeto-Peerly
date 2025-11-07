@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/Peerly/MainActivity.kt
 package com.example.Peerly
 
 import android.graphics.Color
@@ -45,16 +44,16 @@ class MainActivity : ComponentActivity() {
 
                     NavHost(
                         navController = nav,
-                        startDestination = "splash" // <<--- começa no Splash
+                        startDestination = "splash"
                     ) {
-                        /* SPLASH decide o próximo destino */
+
                         composable("splash") {
                             SplashScreen(
-                                // passa um callback simples para navegar
+
                                 onFinish = {
                                     val isLogged = UserSession.currentUser != null
                                     nav.navigate(if (isLogged) "welcome" else "login") {
-                                        popUpTo("splash") { inclusive = true } // remove splash da pilha
+                                        popUpTo("splash") { inclusive = true }
                                     }
                                 }
                             )
@@ -66,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         composable("home")        { HomeScreen(nav) }
                         composable("user")        { UserScreen(nav) }
 
-                        // Perfil do tutor
+
                         composable(
                             route = "info_tutor/{id}/{name}" +
                                     "?subject={subject}&desc={desc}&rating={rating}&reviews={reviews}",
@@ -100,7 +99,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Agendar sessão
+
                         composable(
                             route = "agendar_sessao?tutorId={tutorId}&tutorName={tutorName}&tutorSubject={tutorSubject}",
                             arguments = listOf(
@@ -121,7 +120,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Próxima sessão
+
                         composable("proxima_sessao") {
                             NextSessionScreen(nav)
                         }

@@ -61,7 +61,7 @@ fun NextSessionScreen(navController: NavController) {
 
     var tabIndex by remember { mutableStateOf(0) } // 0 = próximas, 1 = passadas
 
-    // Reativo ao stateflow do repositório
+
     val allSessions by SessionRepository.sessions.collectAsState()
     val now = LocalDateTime.now()
     val upcoming = remember(allSessions, now) { allSessions.filter { it.start.isAfter(now) }.sortedBy { it.start } }
@@ -78,7 +78,7 @@ fun NextSessionScreen(navController: NavController) {
             .systemBarsPadding()
             .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
-        // Top bar
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
@@ -95,7 +95,7 @@ fun NextSessionScreen(navController: NavController) {
 
         Spacer(Modifier.height(20.dp))
 
-        // Tabs (corrigido: weight aplicado no call site)
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -154,7 +154,7 @@ fun NextSessionScreen(navController: NavController) {
 
         Spacer(Modifier.height(20.dp))
 
-        // CTA: nova sessão
+
         Button(
             onClick = { navController.navigate("agendar_sessao") },
             shape = RoundedCornerShape(28.dp),

@@ -50,7 +50,7 @@ fun InfoTutorScreen(
     tutorRating: Float,
     tutorReviews: Int,
     initialPhoto: String? = null,
-    // ✅ agora permite retorno nulo (se upload falhar ou não devolver URL)
+
     onUpload: (suspend (tutorId: String, file: File) -> String?)? = null
 ) {
     val name = tutorName ?: "Tutor(a)"
@@ -61,14 +61,14 @@ fun InfoTutorScreen(
     var photoUrl by remember { mutableStateOf(initialPhoto) }
     var isUploading by remember { mutableStateOf(false) }
 
-    // Carrega URL guardada (DataStore) se existir
+
     LaunchedEffect(tutorId) {
         if (!tutorId.isNullOrBlank()) {
             readTutorPhoto(ctx, tutorId)?.let { saved -> photoUrl = saved }
         }
     }
 
-    // Picker de imagem
+
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri ?: return@rememberLauncherForActivityResult
 
@@ -78,13 +78,13 @@ fun InfoTutorScreen(
         }
 
         scope.launch {
-            // 1) Persistir local
+
             val file = persistToInternal(ctx, uri, tutorId)
             val localUrl = Uri.fromFile(file).toString()
             photoUrl = localUrl
             saveTutorPhoto(ctx, tutorId, localUrl)
 
-            // 2) Tentar upload remoto (se callback fornecido)
+
             onUpload?.let { uploader ->
                 isUploading = true
                 try {
@@ -149,7 +149,7 @@ fun InfoTutorScreen(
 
             Spacer(Modifier.height(sectionGap))
 
-            // Avatar
+
             Box(
                 modifier = Modifier
                     .size(avatarSize)
@@ -209,7 +209,7 @@ fun InfoTutorScreen(
 
             Spacer(Modifier.weight(1f))
 
-            // Botões
+
             Column(modifier = Modifier.fillMaxWidth()) {
                 Button(
                     onClick = { /* TODO: ver todos os horários */ },

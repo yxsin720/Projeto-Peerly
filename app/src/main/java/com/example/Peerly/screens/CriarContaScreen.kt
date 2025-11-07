@@ -54,22 +54,19 @@ fun CriarContaScreen(navController: NavController) {
         loading = true
         scope.launch {
             try {
-                // 1) Criar no backend (POST /api/users)
+
                 val created = repo.registerViaUsers(
                     fullName = nome.trim(),
                     email = email.trim(),
-                    password = password // backend espera em 'passwordHash'
-                )
+                    password = password             )
 
-                // 2) Login imediato (POST /api/auth/login)
+
                 val logged = repo.login(email.trim(), password)
 
-                // 3) Guardar sessão (em memória/persistência, conforme teu UserSession)
-                UserSession.setUser(logged)
+                           UserSession.setUser(logged)
 
                 createdOk = true
-                // 4) Navegar (troca "home" se quiseres outro destino)
-                navController.navigate("home") {
+                     navController.navigate("home") {
                     popUpTo("criar_conta") { inclusive = true }
                     launchSingleTop = true
                 }

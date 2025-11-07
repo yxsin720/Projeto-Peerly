@@ -20,8 +20,8 @@ import androidx.compose.material3.Text
 
 @Composable
 fun SplashScreen(
-    navController: NavController? = null,          // opcional
-    onFinish: (() -> Unit)? = null,                // opcional
+    navController: NavController? = null,
+    onFinish: (() -> Unit)? = null,
     delayMs: Long = 1200
 ) {
     Box(

@@ -41,14 +41,14 @@ fun WelcomeScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            // LOGO
+
             Image(
                 painter = painterResource(id = R.drawable.peerlylog),
                 contentDescription = "Logo Peerly",
                 modifier = Modifier.size(180.dp)
             )
 
-            // ILUSTRAÇÃO + TEXTO
+
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Image(
                     painter = painterResource(id = R.drawable.treepeoplepeerly),
@@ -72,7 +72,7 @@ fun WelcomeScreen(navController: NavController) {
                 )
             }
 
-            // BOTÃO "COMEÇAR"
+
             Button(
                 onClick = {
                     navController.navigate("home") {

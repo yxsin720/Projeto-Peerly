@@ -66,7 +66,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
-// ----------------- modelos e seed -----------------
+
 
 data class Tutor(
     val id: String,
@@ -108,7 +108,7 @@ private val seedTutors = listOf(
     )
 )
 
-// ----------------- HomeScreen -----------------
+
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -118,9 +118,9 @@ fun HomeScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // idTutor -> url/uri da foto
+
     val photoMap = remember { mutableStateMapOf<String, String>() }
-    // idTutor -> está a fazer upload?
+
     val uploading = remember { mutableStateMapOf<String, Boolean>() }
 
     suspend fun loadPersistedPhotos() {
@@ -163,13 +163,13 @@ fun HomeScreen(navController: NavController) {
                 scope.launch {
                     uploading[tutor.id] = true
                     try {
-                        // 1) Copia local e persiste
+
                         val file = copyUriToInternal(ctx, pickedUri, "tutor_${tutor.id}.jpg")
                         val localUri = Uri.fromFile(file).toString()
                         photoMap[tutor.id] = localUri
                         saveTutorPhoto(ctx, tutor.id, localUri)
 
-                        // 2) Upload opcional (ex.: servidor). Se devolver URL http(s), substituir + persistir
+
                         val remoteUrl = repo.uploadAvatar(tutor.id, file)
                         if (remoteUrl?.isNotBlank() == true) {
                             photoMap[tutor.id] = remoteUrl
@@ -188,7 +188,7 @@ fun HomeScreen(navController: NavController) {
                 val ratingS = tutor.rating.toString()
                 val reviewsS = tutor.reviews.toString()
 
-                // Vai para InfoTutorScreen (mantém compatível com as tuas rotas atuais)
+
                 navController.navigate(
                     "info_tutor/$idE/$nameE?subject=$subjectE&desc=$descE&rating=$ratingS&reviews=$reviewsS"
                 )
@@ -197,7 +197,6 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
-// ----------------- Header -----------------
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -249,7 +248,7 @@ private fun Header(displayName: String, navController: NavController) {
     }
 }
 
-// ----------------- Cards “Ações” -----------------
+
 
 @Composable
 private fun ActionCards() {
@@ -312,7 +311,7 @@ private fun ActionCard(
     }
 }
 
-// ----------------- Sugestões de tutores -----------------
+
 
 @Composable
 private fun SuggestionsSection(
@@ -414,7 +413,7 @@ private fun TutorCard(
     }
 }
 
-// ----------------- util -----------------
+
 
 private suspend fun copyUriToInternal(ctx: Context, uri: Uri, fileName: String): File =
     withContext(Dispatchers.IO) {
@@ -426,7 +425,7 @@ private suspend fun copyUriToInternal(ctx: Context, uri: Uri, fileName: String):
         file
     }
 
-// ----------------- preview -----------------
+
 
 @Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
 @Composable

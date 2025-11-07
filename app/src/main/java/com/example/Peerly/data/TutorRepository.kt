@@ -12,10 +12,7 @@ class TutorRepository(
     private val api: ApiService = RetrofitInstance.api
 ) {
 
-    /**
-     * Sobe o avatar do tutor e devolve a URL absoluta (ou null em erro).
-     * Casa com o onUpload: suspend (String, File) -> String?
-     */
+
     suspend fun uploadAvatar(tutorId: String, file: File): String? = runCatching {
         val body = file.asRequestBody("image/*".toMediaType())
         val part = MultipartBody.Part.createFormData("file", file.name, body)
@@ -23,17 +20,13 @@ class TutorRepository(
         res["avatarUrl"]
     }.getOrElse { null }
 
-    /**
-     * (Opcional) Helper para quando tens só um Uri (ex.: retornado pelo picker).
-     * Ele copia o conteúdo do Uri para um ficheiro temporário e chama uploadAvatar().
-     */
+
     suspend fun uploadAvatarFromUri(context: Context, tutorId: String, uri: Uri): String? {
         val tmp = copyUriToTemp(context, uri, "tutor_${tutorId}")
         return try {
             uploadAvatar(tutorId, tmp)
         } finally {
-            // podes manter o ficheiro se quiseres cache local; se não, apaga:
-            // tmp.delete()
+
         }
     }
 

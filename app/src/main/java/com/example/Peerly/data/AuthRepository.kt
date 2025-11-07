@@ -34,7 +34,7 @@ class AuthRepository(
         return users.any { it.email.equals(email, ignoreCase = true) }
     }
 
-    /** Lê avatarUrl diretamente do UserResponse devolvido pelo backend */
+
     suspend fun uploadUserAvatar(userId: String, file: File): String? {
         if (userId.isBlank()) return null
         val body = file.asRequestBody("image/*".toMediaType())
@@ -43,7 +43,6 @@ class AuthRepository(
         return userResponse.avatarUrl
     }
 
-    /** (opcional) upload de avatar de tutor */
     suspend fun uploadTutorAvatar(tutorId: String, file: File): String {
         val body = file.asRequestBody("image/*".toMediaType())
         val part = MultipartBody.Part.createFormData("file", file.name, body)

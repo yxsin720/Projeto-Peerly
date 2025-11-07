@@ -48,7 +48,7 @@ fun UserScreen(navController: NavController) {
     val ctx = LocalContext.current
 
     val displayName = remember { UserSession.displayName }
-    // salva estado entre recomposições/rotações
+
     var avatarModel by rememberSaveable { mutableStateOf(UserSession.currentUser?.avatarUrl) }
 
     BoxWithConstraints(
@@ -99,7 +99,7 @@ fun UserScreen(navController: NavController) {
                 baseUrl = "http://10.0.2.2:8080",
                 currentUrl = avatarModel,
                 onUploaded = { absoluteUrl ->
-                    // cache-bust para forçar Coil a buscar a nova imagem
+
                     val clean = absoluteUrl.trim()
                     val withBust = clean + if ('?' in clean) "&t=${System.currentTimeMillis()}"
                     else "?t=${System.currentTimeMillis()}"
@@ -153,7 +153,7 @@ fun UserScreen(navController: NavController) {
             Spacer(Modifier.height(pct(24.dp, 0.06f)))
 
             Button(
-                onClick = { /* editar perfil completo */ },
+                onClick = { },
                 modifier = Modifier.fillMaxWidth(0.88f).height(editBtnHeight),
                 shape = RoundedCornerShape(editBtnRadius),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
@@ -215,7 +215,7 @@ private fun NavCard(text: String, corner: Dp, hPad: Dp, vPad: Dp, onClick: () ->
     }
 }
 
-/* -------------------------- AVATAR EDITÁVEL --------------------------- */
+
 @Composable
 private fun EditAvatar(
     size: Dp,

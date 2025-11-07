@@ -122,14 +122,14 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // LOGO MAIOR
+
             Image(
                 painter = painterResource(id = R.drawable.peerlylog),
                 contentDescription = "Logo Peerly",
                 modifier = Modifier.size(180.dp) // aumentado
             )
 
-            // -------- EMAIL --------
+
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -161,7 +161,7 @@ fun LoginScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // -------- PASSWORD --------
+
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -200,7 +200,7 @@ fun LoginScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // -------- ENTRAR --------
+
             Button(
                 onClick = { if (!isLoading) doLogin() },
                 modifier = Modifier
@@ -219,7 +219,7 @@ fun LoginScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // -------- LINKS --------
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -238,7 +238,7 @@ fun LoginScreen(navController: NavController) {
                 )
             }
 
-            // -------- DIVISOR “OU” --------
+
             Spacer(modifier = Modifier.height(24.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
