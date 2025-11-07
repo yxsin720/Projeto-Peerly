@@ -29,16 +29,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.Peerly.R
+import com.example.Peerly.data.RetrofitInstance
+import com.example.Peerly.data.model.CreateSessionRequest
 import com.example.Peerly.data.readTutorPhoto
+import com.example.Peerly.session.UserSession
 import com.example.Peerly.scheduling.TimeWindow
 import com.example.Peerly.scheduling.availableTimesFor
 import com.example.Peerly.sessions.SessionRepository
 import com.example.Peerly.sessions.SessionUi
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
+import kotlinx.coroutines.launch
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
@@ -51,15 +51,22 @@ fun AgendarSessaoScreen(
     tutorSubject: String? = "Design",
 ) {
     val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val api = remember { RetrofitInstance.api }
+
+    // Locale/Zone
     val zone = remember { ZoneId.of("Europe/Lisbon") }
     val locale = remember { Locale("pt", "PT") }
+    val isoFmt = remember { DateTimeFormatter.ISO_LOCAL_DATE_TIME } // 2025-11-08T09:00:00
+    val summaryFmt = remember { DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM yyyy", locale) }
 
-     var tutorPhoto by remember { mutableStateOf<String?>(null) }
+    // Tutor avatar (cache local se existir)
+    var tutorPhoto by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(tutorId) {
         if (!tutorId.isNullOrBlank()) tutorPhoto = readTutorPhoto(ctx, tutorId)
     }
 
-
+    // Seleção data/hora
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now(zone)) }
     val blocked = remember(selectedDate) {
         if (selectedDate.dayOfWeek == DayOfWeek.SATURDAY || selectedDate.dayOfWeek == DayOfWeek.SUNDAY)
@@ -75,7 +82,10 @@ fun AgendarSessaoScreen(
 
     val durations = listOf("30 min", "1h", "2h")
     var selectedDuration by rememberSaveable { mutableStateOf("1h") }
-    val summaryFmt = remember { DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM yyyy", locale) }
+
+    // UI state
+    var saving by remember { mutableStateOf(false) }
+    var errorMsg by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -85,7 +95,7 @@ fun AgendarSessaoScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        // Topbar
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -99,13 +109,12 @@ fun AgendarSessaoScreen(
 
         Spacer(Modifier.height(18.dp))
 
-
+        // Tutor header
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val avatar = Modifier.size(72.dp).clip(CircleShape)
             if (!tutorPhoto.isNullOrBlank()) {
                 AsyncImage(model = tutorPhoto, contentDescription = null, modifier = avatar)
             } else {
-
                 Image(painterResource(R.drawable.rita), contentDescription = null, modifier = avatar)
             }
             Spacer(Modifier.width(16.dp))
@@ -129,6 +138,11 @@ fun AgendarSessaoScreen(
         Spacer(Modifier.height(16.dp))
         DurationChips(durations, selectedDuration) { selectedDuration = it }
 
+        if (errorMsg != null) {
+            Spacer(Modifier.height(10.dp))
+            Text(errorMsg!!, color = Color.White, fontSize = 14.sp)
+        }
+
         Spacer(Modifier.weight(1f))
 
         // Resumo + Confirmar
@@ -150,40 +164,75 @@ fun AgendarSessaoScreen(
                 }
             )
             Spacer(Modifier.height(10.dp))
-            ConfirmButton(enabled = selectedTime != null) {
+
+            ConfirmButton(enabled = selectedTime != null && !saving) {
                 val timeStr = selectedTime ?: return@ConfirmButton
                 val parsedTime = runCatching { LocalTime.parse(timeStr) }.getOrNull()
                     ?: return@ConfirmButton
 
-                val start = LocalDateTime.of(selectedDate, parsedTime)
+                val startLocal = LocalDateTime.of(selectedDate, parsedTime).withSecond(0).withNano(0)
                 val minutes = when (selectedDuration) {
                     "30 min" -> 30
                     "1h"     -> 60
                     else     -> 120
                 }
-                val end = start.plusMinutes(minutes.toLong())
+                val endLocal = startLocal.plusMinutes(minutes.toLong())
 
+                val startsAtStr = startLocal.format(isoFmt)
+                val endsAtStr   = endLocal.format(isoFmt)
 
-                SessionRepository.add(
-                    SessionUi(
-                        tutorId   = tutorId,
-                        tutorName = tutorName ?: "Tutor(a)",
-                        subject   = tutorSubject ?: "-",
-                        start     = start,
-                        end       = end,
-                        avatarUrl = tutorPhoto
-                    )
+                val title = "Sessão com ${tutorName ?: "Tutor(a)"} — ${tutorSubject ?: "-"}"
+                val studentId = UserSession.currentUser?.id?.takeIf { it.isNotBlank() }
+
+                val req = CreateSessionRequest(
+                    tutorId = tutorId ?: "",
+                    subjectId = null, // preenche se tiveres o ID da disciplina
+                    title = title,
+                    description = "Sessão agendada pela app Peerly.",
+                    startsAt = startsAtStr,
+                    endsAt = endsAtStr,
+                    maxParticipants = 1,
+                    priceTotalCents = null,
+                    studentId = studentId
                 )
 
-                            navController.navigate("proxima_sessao") {
-                    launchSingleTop = true
+                saving = true
+                errorMsg = null
+
+                scope.launch {
+                    try {
+                        // 1) Cria sessão no backend
+                        val created = api.createSession(req)
+
+                        // 2) Guarda no repositório local para o NextSessionScreen
+                        SessionRepository.add(
+                            SessionUi(
+                                tutorId   = created.tutorId ?: tutorId,
+                                tutorName = tutorName ?: "Tutor(a)",
+                                subject   = tutorSubject ?: "-",
+                                start     = startLocal,
+                                end       = endLocal,
+                                avatarUrl = tutorPhoto
+                            )
+                        )
+
+                        // 3) Vai para a próxima sessão
+                        navController.navigate("proxima_sessao") {
+                            popUpTo("agendar_sessao") { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    } catch (e: Exception) {
+                        errorMsg = "Falha ao agendar: ${e.message ?: "erro desconhecido"}"
+                    } finally {
+                        saving = false
+                    }
                 }
             }
         }
     }
 }
 
-
+/* ---------- Calendário ---------- */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CalendarScroller(
@@ -249,7 +298,7 @@ private fun CalendarScroller(
     }
 }
 
-
+/* ---------- Chips de horas / duração ---------- */
 @Composable
 private fun TimeChips(
     times: List<String>,
@@ -304,7 +353,7 @@ private fun DurationChips(
     }
 }
 
-
+/* ---------- Resumo + botão ---------- */
 @Composable
 private fun SummaryCard(tutorName: String, line: String) {
     Card(

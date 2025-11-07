@@ -24,7 +24,7 @@ import com.example.Peerly.screens.UserScreen
 import com.example.Peerly.screens.WelcomeScreen
 import com.example.Peerly.session.UserSession
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
-import com.example.myapplicationpeerly4.screens.HomeScreen
+import com.example.Peerly.screens.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
