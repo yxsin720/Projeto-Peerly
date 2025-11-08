@@ -39,7 +39,7 @@ class AuthRepository(
         if (userId.isBlank()) return null
         val body = file.asRequestBody("image/*".toMediaType())
         val part = MultipartBody.Part.createFormData("file", file.name, body)
-        val userResponse = api.uploadUserAvatar(userId, part)   // <- UserResponse
+        val userResponse = api.uploadUserAvatar(userId, part)
         return userResponse.avatarUrl
     }
 

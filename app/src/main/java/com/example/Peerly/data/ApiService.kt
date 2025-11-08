@@ -1,4 +1,3 @@
-// ApiService.kt
 package com.example.Peerly.data
 
 import com.example.Peerly.data.model.CreateSessionRequest
@@ -14,19 +13,16 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 
-/**
- * Retrofit endpoints da API Peerly.
- * Base URL definida em RetrofitInstance (ex.: http://10.0.2.2:8080/).
- */
+
 interface ApiService {
 
-    /* -------------------- AUTH -------------------- */
+
 
     @POST("api/auth/login")
     suspend fun login(@Body body: LoginRequest): UserResponse
 
 
-    /* -------------------- USERS ------------------- */
+
 
     @GET("api/users")
     suspend fun getUsers(): List<UserResponse>
@@ -42,8 +38,6 @@ interface ApiService {
     ): UserResponse
 
 
-    /* -------------------- TUTORS ------------------ */
-    // Mantém apenas se estiveres a usar avatars próprios de tutor.
 
     @Multipart
     @POST("api/tutors/{id}/avatar")
@@ -53,7 +47,7 @@ interface ApiService {
     ): Map<String, String>
 
 
-    /* ------------------- SESSIONS ----------------- */
+
 
     @POST("api/sessions")
     suspend fun createSession(@Body body: CreateSessionRequest): SessionDto

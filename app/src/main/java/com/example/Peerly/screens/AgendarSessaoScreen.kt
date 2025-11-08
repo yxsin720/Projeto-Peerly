@@ -54,19 +54,19 @@ fun AgendarSessaoScreen(
     val scope = rememberCoroutineScope()
     val api = remember { RetrofitInstance.api }
 
-    // Locale/Zone
+
     val zone = remember { ZoneId.of("Europe/Lisbon") }
     val locale = remember { Locale("pt", "PT") }
-    val isoFmt = remember { DateTimeFormatter.ISO_LOCAL_DATE_TIME } // 2025-11-08T09:00:00
+    val isoFmt = remember { DateTimeFormatter.ISO_LOCAL_DATE_TIME }
     val summaryFmt = remember { DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM yyyy", locale) }
 
-    // Tutor avatar (cache local se existir)
+
     var tutorPhoto by remember { mutableStateOf<String?>(null) }
     LaunchedEffect(tutorId) {
         if (!tutorId.isNullOrBlank()) tutorPhoto = readTutorPhoto(ctx, tutorId)
     }
 
-    // Seleção data/hora
+
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now(zone)) }
     val blocked = remember(selectedDate) {
         if (selectedDate.dayOfWeek == DayOfWeek.SATURDAY || selectedDate.dayOfWeek == DayOfWeek.SUNDAY)
@@ -83,7 +83,7 @@ fun AgendarSessaoScreen(
     val durations = listOf("30 min", "1h", "2h")
     var selectedDuration by rememberSaveable { mutableStateOf("1h") }
 
-    // UI state
+
     var saving by remember { mutableStateOf(false) }
     var errorMsg by remember { mutableStateOf<String?>(null) }
 
@@ -95,7 +95,7 @@ fun AgendarSessaoScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Topbar
+
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -109,7 +109,7 @@ fun AgendarSessaoScreen(
 
         Spacer(Modifier.height(18.dp))
 
-        // Tutor header
+
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val avatar = Modifier.size(72.dp).clip(CircleShape)
             if (!tutorPhoto.isNullOrBlank()) {
@@ -145,7 +145,7 @@ fun AgendarSessaoScreen(
 
         Spacer(Modifier.weight(1f))
 
-        // Resumo + Confirmar
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -186,7 +186,7 @@ fun AgendarSessaoScreen(
 
                 val req = CreateSessionRequest(
                     tutorId = tutorId ?: "",
-                    subjectId = null, // preenche se tiveres o ID da disciplina
+                    subjectId = null,
                     title = title,
                     description = "Sessão agendada pela app Peerly.",
                     startsAt = startsAtStr,
@@ -201,10 +201,10 @@ fun AgendarSessaoScreen(
 
                 scope.launch {
                     try {
-                        // 1) Cria sessão no backend
+
                         val created = api.createSession(req)
 
-                        // 2) Guarda no repositório local para o NextSessionScreen
+
                         SessionRepository.add(
                             SessionUi(
                                 tutorId   = created.tutorId ?: tutorId,
@@ -216,7 +216,7 @@ fun AgendarSessaoScreen(
                             )
                         )
 
-                        // 3) Vai para a próxima sessão
+
                         navController.navigate("proxima_sessao") {
                             popUpTo("agendar_sessao") { inclusive = true }
                             launchSingleTop = true
@@ -232,7 +232,7 @@ fun AgendarSessaoScreen(
     }
 }
 
-/* ---------- Calendário ---------- */
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun CalendarScroller(
@@ -298,7 +298,7 @@ private fun CalendarScroller(
     }
 }
 
-/* ---------- Chips de horas / duração ---------- */
+
 @Composable
 private fun TimeChips(
     times: List<String>,
@@ -353,7 +353,7 @@ private fun DurationChips(
     }
 }
 
-/* ---------- Resumo + botão ---------- */
+
 @Composable
 private fun SummaryCard(tutorName: String, line: String) {
     Card(

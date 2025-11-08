@@ -16,7 +16,7 @@ class TutorRepository(
     suspend fun uploadAvatar(tutorId: String, file: File): String? = runCatching {
         val body = file.asRequestBody("image/*".toMediaType())
         val part = MultipartBody.Part.createFormData("file", file.name, body)
-        val res = api.uploadTutorAvatar(tutorId, part)   // {"avatarUrl": "http://host:port/uploads/...jpg"}
+        val res = api.uploadTutorAvatar(tutorId, part)
         res["avatarUrl"]
     }.getOrElse { null }
 

@@ -124,7 +124,7 @@ fun InfoTutorScreen(
                 .systemBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Topbar
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

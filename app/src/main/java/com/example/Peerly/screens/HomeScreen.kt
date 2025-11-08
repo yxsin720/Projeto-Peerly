@@ -9,7 +9,19 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -19,8 +31,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,13 +77,10 @@ data class Tutor(
     @DrawableRes val imageResId: Int
 )
 
-/**
- * IMPORTANTE: IDs reais vindos da tua BD (tabela users, role = 'tutor').
- * (Copiados do screenshot que enviaste)
- */
+
 private val seedTutors = listOf(
     Tutor(
-        id = "2d238e82-bc00-11f0-a9b0-c4efbbb92864", // Pedro Almeida
+        id = "2d238e82-bc00-11f0-a9b0-c4efbbb92864",
         name = "Pedro Almeida",
         subject = "MATEMÁTICA",
         description = "Professor dedicado e paciente que transforma problemas complexos em explicações simples e acessíveis.",
@@ -76,7 +89,7 @@ private val seedTutors = listOf(
         imageResId = R.drawable.pedro
     ),
     Tutor(
-        id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864", // Erica Santos
+        id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864",
         name = "Erica Santos",
         subject = "PROGRAMAÇÃO",
         description = "Engenheira de software apaixonada por ajudar iniciantes a dominar lógica, Java e Kotlin de forma prática.",
@@ -85,7 +98,7 @@ private val seedTutors = listOf(
         imageResId = R.drawable.erica
     ),
     Tutor(
-        id = "baddd584-b456-11f0-95be-c4efbbb92864", // Ana Rita
+        id = "baddd584-b456-11f0-95be-c4efbbb92864",
         name = "Rita Fernandes",
         subject = "DESIGN",
         description = "Designer gráfica apaixonada por ensinar fundamentos de UI/UX e ferramentas criativas.",
@@ -94,13 +107,13 @@ private val seedTutors = listOf(
         imageResId = R.drawable.rita
     ),
     Tutor(
-        id = "bade1da4-b456-11f0-95be-c4efbbb92864", // João Silva
+        id = "bade1da4-b456-11f0-95be-c4efbbb92864",
         name = "João Silva",
         subject = "INGLÊS",
         description = "Apaixonado por línguas, foco em conversação e gramática aplicada ao dia-a-dia.",
         rating = 4.7,
         reviews = 81,
-        imageResId = R.drawable.pedro // troca pelo avatar que preferires
+        imageResId = R.drawable.pedro
     )
 )
 
@@ -112,9 +125,9 @@ fun HomeScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // foto persistida/local por tutorId -> url/uri
+
     val photoMap = remember { mutableStateMapOf<String, String>() }
-    // estado de upload por tutorId
+
     val uploading = remember { mutableStateMapOf<String, Boolean>() }
 
     suspend fun loadPersistedPhotos() {
@@ -157,13 +170,13 @@ fun HomeScreen(navController: NavController) {
                 scope.launch {
                     uploading[tutor.id] = true
                     try {
-                        // 1) gravar local para preview imediato
+
                         val file = copyUriToInternal(ctx, pickedUri, "tutor_${tutor.id}.jpg")
                         val localUri = Uri.fromFile(file).toString()
                         photoMap[tutor.id] = localUri
                         saveTutorPhoto(ctx, tutor.id, localUri)
 
-                        // 2) tentar subir ao backend (opcional)
+
                         val remoteUrl = repo.uploadAvatar(tutor.id, file)
                         if (remoteUrl?.isNotBlank() == true) {
                             photoMap[tutor.id] = remoteUrl
@@ -175,7 +188,7 @@ fun HomeScreen(navController: NavController) {
                 }
             },
             onOpen = { tutor ->
-                // passa SEMPRE o ID REAL
+
                 val idE = Uri.encode(tutor.id)
                 val nameE = Uri.encode(tutor.name)
                 val subjectE = Uri.encode(tutor.subject)

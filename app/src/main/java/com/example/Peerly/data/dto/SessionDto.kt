@@ -1,4 +1,3 @@
-// SessionDto.kt
 data class SessionDto(
     val id: String,
     val title: String,

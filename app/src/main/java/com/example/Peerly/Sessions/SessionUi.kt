@@ -1,4 +1,3 @@
-// com/example/Peerly/sessions/SessionUi.kt
 package com.example.Peerly.sessions
 
 import java.time.LocalDateTime

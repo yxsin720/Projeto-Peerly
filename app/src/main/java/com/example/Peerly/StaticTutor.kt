@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 import com.example.Peerly.R
 
 data class StaticTutor(
-    val id: String,          // <- UUID REAL da BD
+    val id: String,
     val name: String,
     val subject: String,
     @DrawableRes val avatarRes: Int
@@ -16,7 +16,7 @@ object StaticTutors {
             id = "2d238e82-bc00-11f0-a9b0-c4efbbb92864",
             name = "Pedro Almeida",
             subject = "Matemática",
-            avatarRes = R.drawable.pedro   // ajusta ao teu nome de ficheiro
+            avatarRes = R.drawable.pedro
         ),
         StaticTutor(
             id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864",
