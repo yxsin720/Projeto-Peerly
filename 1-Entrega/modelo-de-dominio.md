@@ -1,55 +1,74 @@
 # Modelo de Domínio — Peerly
 
-O modelo de domínio do Peerly representa as principais entidades do sistema e as suas relações.
+O modelo de domínio do **Peerly** representa as principais entidades do sistema e as suas relações.
 
 ---
 
 ## Entidades Principais
 
 ### Utilizador
-- id (PK)
-- nome
-- email
-- curso
+- id (PK)  
+- nome  
+- email  
+- curso  
 
-### Tutor (especialização de Utilizador)
-- especialização
-- avaliaçãoMedia
-
-### Sessão
-- id (PK)
-- data
-- hora
-- tutor_id (FK)
-- estudante_id (FK)
-- disciplina_id (FK)
+### Tutor
+- id (PK)  
+- user_id (FK)  
+- bio  
+- avaliação_média  
 
 ### Disciplina
-- id (PK)
-- nome
+- id (PK)  
+- nome  
 
-### Feedback
-- id (PK)
-- rating
-- comentário
+### Sessão
+- id (PK)  
+- tutor_id (FK)  
+- estudante_id (FK)  
+- disciplina_id (FK)  
+- data_hora  
+- estado  
 
-### Notificacao
-- id (PK)
-- mensagem
-- dataEnvio
-- utilizador_id (FK)
+### Mensagem
+- id (PK)  
+- remetente_id (FK)  
+- destinatário_id (FK)  
+- conteúdo  
+- data_envio  
+
+### Avaliação
+- id (PK)  
+- sessão_id (FK)  
+- utilizador_id (FK)  
+- rating  
+- comentário  
+
+### Notificação
+- id (PK)  
+- utilizador_id (FK)  
+- mensagem  
+- data_envio  
 
 ---
 
-## 🔗 Relações Essenciais
-- Um **Tutor** é um tipo de **Utilizador** (herança).  
-- Um **Utilizador** pode agendar várias **Sessões**.  
-- Cada **Sessão** está associada a uma única **Disciplina**.  
-- Uma **Sessão** pode gerar vários **Feedbacks**.  
-- Um **Utilizador**
-ode receber várias **Notificações**.
+## Relações Essenciais
+- Um **Utilizador** pode ser também um **Tutor**.  
+- Um **Tutor** pode lecionar várias **Disciplinas**.  
+- Um **Utilizador** pode participar em várias **Sessões**.  
+- Cada **Sessão** está ligada a uma **Disciplina** e a um **Tutor**.  
+- Um **Utilizador** pode enviar **Mensagens** e fazer **Avaliações**.  
+- Cada **Utilizador** pode receber várias **Notificações**.  
 
-  
+---
 
-<img width="661" height="724" alt="modelo-dominio-peerly drawio" src="https://github.com/user-attachments/assets/74aeee4a-016d-471f-a507-59b75d41eab6" />
+## Diagrama do modelo de domínio:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/08b0fa32-147b-4e3d-be54-c35bbb7bf900" 
+       alt="Diagrama_ER_Peerly" 
+       width="700">
+</p>
+>
+
 
