@@ -1,34 +1,25 @@
 package com.example.Peerly.data
 
-import com.example.Peerly.data.model.CreateSessionRequest
-import com.example.Peerly.data.model.LoginRequest
-import com.example.Peerly.data.model.SessionDto
-import com.example.Peerly.data.model.UserCreateRequest
-import com.example.Peerly.data.model.UserResponse
+import com.example.Peerly.data.model.*
 import okhttp3.MultipartBody
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.Path
-
+import retrofit2.http.*
 
 interface ApiService {
 
-
-
     @POST("api/auth/login")
     suspend fun login(@Body body: LoginRequest): UserResponse
-
-
-
 
     @GET("api/users")
     suspend fun getUsers(): List<UserResponse>
 
     @POST("api/users")
     suspend fun createUser(@Body body: UserCreateRequest): UserResponse
+
+    @POST("api/users/{id}/update")
+    suspend fun updateUser(
+        @Path("id") userId: String,
+        @Body body: Map<String, @JvmSuppressWildcards Any?>
+    ): UserResponse
 
     @Multipart
     @POST("api/users/{id}/avatar")
@@ -37,17 +28,12 @@ interface ApiService {
         @Part file: MultipartBody.Part
     ): UserResponse
 
-
-
     @Multipart
     @POST("api/tutors/{id}/avatar")
     suspend fun uploadTutorAvatar(
         @Path("id") tutorId: String,
         @Part file: MultipartBody.Part
     ): Map<String, String>
-
-
-
 
     @POST("api/sessions")
     suspend fun createSession(@Body body: CreateSessionRequest): SessionDto

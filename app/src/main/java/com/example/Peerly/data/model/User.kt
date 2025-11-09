@@ -5,5 +5,6 @@ data class User(
     val email: String,
     val fullName: String,
     val role: String,
-    val avatarUrl: String
+    val avatarUrl: String,
+    val area: String
 )

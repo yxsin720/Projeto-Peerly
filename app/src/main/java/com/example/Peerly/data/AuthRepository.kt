@@ -1,9 +1,6 @@
 package com.example.Peerly.data
 
-import com.example.Peerly.data.model.LoginRequest
-import com.example.Peerly.data.model.User
-import com.example.Peerly.data.model.UserCreateRequest
-import com.example.Peerly.data.model.toDomain
+import com.example.Peerly.data.model.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -17,7 +14,12 @@ class AuthRepository(
         return res.toDomain()
     }
 
-    suspend fun registerViaUsers(fullName: String, email: String, password: String): User {
+    suspend fun registerViaUsers(
+        fullName: String,
+        email: String,
+        password: String,
+        area: String? = null
+    ): User {
         val req = UserCreateRequest(
             email = email,
             fullName = fullName,
@@ -25,15 +27,17 @@ class AuthRepository(
             language = "pt",
             role = null
         )
-        val res = api.createUser(req)
-        return res.toDomain()
+        val created = api.createUser(req)
+        val a = area?.takeIf { it.isNotBlank() }
+        return if (a != null && !created.id.isNullOrBlank()) {
+            api.updateUser(created.id!!, mapOf("area" to a)).toDomain()
+        } else created.toDomain()
     }
 
     suspend fun emailExists(email: String): Boolean {
         val users = api.getUsers()
         return users.any { it.email.equals(email, ignoreCase = true) }
     }
-
 
     suspend fun uploadUserAvatar(userId: String, file: File): String? {
         if (userId.isBlank()) return null
@@ -49,4 +53,7 @@ class AuthRepository(
         val map = api.uploadTutorAvatar(tutorId, part)
         return map["avatarUrl"].orEmpty()
     }
+
+    suspend fun updateArea(userId: String, area: String): User =
+        api.updateUser(userId, mapOf("area" to area)).toDomain()
 }

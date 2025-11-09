@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.Peerly.session.UserSession
 import com.example.Peerly.data.TutorRepository
 import com.example.Peerly.screens.AgendarSessaoScreen
 import com.example.Peerly.screens.CriarContaScreen
@@ -22,7 +23,6 @@ import com.example.Peerly.screens.NextSessionScreen
 import com.example.Peerly.screens.SplashScreen
 import com.example.Peerly.screens.UserScreen
 import com.example.Peerly.screens.WelcomeScreen
-import com.example.Peerly.session.UserSession
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import com.example.Peerly.screens.HomeScreen
 

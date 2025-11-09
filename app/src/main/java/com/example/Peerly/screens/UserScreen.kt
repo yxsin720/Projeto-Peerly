@@ -1,42 +1,20 @@
 package com.example.Peerly.screens
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,21 +35,33 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.Peerly.R
 import com.example.Peerly.data.AuthRepository
+import com.example.Peerly.session.UserPrefs          // <-- IMPORT CORRETO
 import com.example.Peerly.session.UserSession
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserScreen(navController: NavController) {
     val repo = remember { AuthRepository() }
     val ctx = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    val displayName = remember { UserSession.displayName }
+    val user = UserSession.currentUser
+    val displayName = remember(user) { UserSession.displayName }
+    var area by remember(user) { mutableStateOf(user?.area.orEmpty()) }
+    var avatarModel by rememberSaveable { mutableStateOf(user?.avatarUrl) }
+    var showAreaSheet by remember { mutableStateOf(false) }
 
-    var avatarModel by rememberSaveable { mutableStateOf(UserSession.currentUser?.avatarUrl) }
+    val areas = listOf(
+        "Design","Informática","Línguas","Arquitetura",
+        "Matemática","Economia","Biologia","Química","Física","História"
+    )
 
     BoxWithConstraints(
         modifier = Modifier
@@ -108,7 +98,7 @@ fun UserScreen(navController: NavController) {
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Voltar",
+                    contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.size(topBarIconSize).clickable { navController.popBackStack() }
                 )
@@ -121,20 +111,12 @@ fun UserScreen(navController: NavController) {
                 baseUrl = "http://10.0.2.2:8080",
                 currentUrl = avatarModel,
                 onUploaded = { absoluteUrl ->
-
-                    val clean = absoluteUrl.trim()
-                    val withBust = clean + if ('?' in clean) "&t=${System.currentTimeMillis()}"
-                    else "?t=${System.currentTimeMillis()}"
+                    val withBust = absoluteUrl.trim() +
+                            if ('?' in absoluteUrl) "&t=${System.currentTimeMillis()}" else "?t=${System.currentTimeMillis()}"
                     avatarModel = withBust
-                    // persiste na sessão
-                    UserSession.currentUser?.let { u ->
-                        UserSession.setUser(u.copy(avatarUrl = withBust))
-                    }
+                    UserSession.updateAvatar(ctx, withBust)
                 },
-                onSelectLocal = { localUri ->
-                    // preview imediato
-                    avatarModel = localUri.toString()
-                },
+                onSelectLocal = { localUri -> avatarModel = localUri.toString() },
                 onUpload = { file ->
                     val userId = UserSession.currentUser?.id
                     if (userId.isNullOrBlank()) "" else (repo.uploadUserAvatar(userId, file) ?: "")
@@ -150,7 +132,13 @@ fun UserScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
-            Text("Estudante de Design", color = Color.White.copy(alpha = 0.92f), fontSize = roleFont)
+
+            Text(
+                text = if (area.isBlank()) "Escolher área/curso" else "Estudante de $area",
+                color = Color.White.copy(alpha = 0.92f),
+                fontSize = roleFont,
+                modifier = Modifier.clickable { showAreaSheet = true }
+            )
 
             Spacer(Modifier.height(pct(18.dp, 0.04f)))
 
@@ -191,12 +179,91 @@ fun UserScreen(navController: NavController) {
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Editar perfil", color = Color.White, fontWeight = FontWeight.SemiBold,
-                        fontStyle = FontStyle.Italic, fontSize = (w.value * 0.045f).sp)
+                    Text(
+                        "Editar perfil",
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = (w.value * 0.045f).sp
+                    )
                 }
             }
 
+            Spacer(Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    UserSession.clear()
+                    try { UserPrefs.clearAll(ctx) } catch (_: Throwable) {}
+                    navController.navigate("login") {
+                        popUpTo("splash") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(0.88f).height(editBtnHeight),
+                shape = RoundedCornerShape(editBtnRadius),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
+            ) {
+                Text(
+                    "Terminar sessão",
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = (w.value * 0.045f).sp
+                )
+            }
+
             Spacer(Modifier.height(pct(16.dp, 0.04f)))
+        }
+
+        if (showAreaSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showAreaSheet = false },
+                containerColor = Color(0xFF2F2A8F),
+                scrimColor = Color.Black.copy(alpha = 0.45f)
+            ) {
+                Text(
+                    "Escolher área/curso",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
+                )
+                Spacer(Modifier.height(8.dp))
+                areas.forEach { a ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                val uid = UserSession.currentUser?.id.orEmpty()
+                                if (uid.isNotBlank()) {
+                                    scope.launch {
+                                        val updated = repo.updateArea(uid, a)
+                                        UserSession.setUser(updated)
+                                        UserSession.updateArea(ctx, a)
+                                        area = a
+                                        showAreaSheet = false
+                                    }
+                                } else {
+                                    area = a
+                                    UserSession.updateArea(ctx, a)
+                                    showAreaSheet = false
+                                }
+                            }
+                            .padding(horizontal = 20.dp, vertical = 14.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(a, color = Color.White, fontSize = 16.sp, modifier = Modifier.weight(1f))
+                        if (a == area) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(24.dp))
+            }
         }
     }
 }
@@ -237,7 +304,6 @@ private fun NavCard(text: String, corner: Dp, hPad: Dp, vPad: Dp, onClick: () ->
     }
 }
 
-
 @Composable
 private fun EditAvatar(
     size: Dp,
@@ -263,16 +329,12 @@ private fun EditAvatar(
         ?: "android.resource://${ctx.packageName}/${R.drawable.avatar_profile}"
 
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-
         val req = remember(model) {
-            ImageRequest.Builder(ctx)
-                .data(model)
-                .crossfade(true)
-                .build()
+            ImageRequest.Builder(ctx).data(model).crossfade(true).build()
         }
         AsyncImage(
             model = req,
-            contentDescription = "Avatar do Utilizador",
+            contentDescription = null,
             placeholder = painterResource(R.drawable.avatar_profile),
             error = painterResource(R.drawable.avatar_profile),
             contentScale = ContentScale.Crop,
@@ -298,7 +360,6 @@ private fun EditAvatar(
     LaunchedEffect(localUri) {
         val uri = localUri ?: return@LaunchedEffect
         if (onUpload == null) return@LaunchedEffect
-
         isUploading = true
         try {
             val file = withContext(Dispatchers.IO) {
@@ -309,14 +370,12 @@ private fun EditAvatar(
                 f
             }
             val returned = onUpload(file).orEmpty()
-
             val absolute = when {
                 returned.isBlank() -> ""
-                returned.startsWith("http", ignoreCase = true) -> returned
+                returned.startsWith("http", true) -> returned
                 returned.startsWith("/") && baseUrl.isNotBlank() -> baseUrl.trimEnd('/') + returned
                 else -> returned
             }
-
             if (absolute.isNotBlank()) onUploaded(absolute)
         } finally {
             isUploading = false
