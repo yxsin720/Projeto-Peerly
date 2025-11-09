@@ -9,17 +9,17 @@ public class Tutor {
 
     @Id
     @Column(nullable = false, updatable = false)
-    private String id;           // Mantém String conforme já estás a usar no backend
+    private String id;           
 
     @Column(nullable = false)
     private String name;
 
     @Column
-    private String avatarUrl;    // URL HTTP ou file:// interno
+    private String avatarUrl;   
 
     public Tutor() {}
 
-    // -------- GETTERS --------
+  
     public String getId() {
         return id;
     }
@@ -32,7 +32,7 @@ public class Tutor {
         return avatarUrl;
     }
 
-    // -------- SETTERS --------
+
     public void setId(String id) {
         this.id = id;
     }

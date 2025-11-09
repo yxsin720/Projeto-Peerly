@@ -4,8 +4,8 @@ public class TutorSubjectDTO {
     private String subjectId;
     private String subjectSlug;
     private String subjectName;
-    private String level;              // ex: "intermédio"
-    private Integer pricePerHourCents; // pode ser null
+    private String level;              
+    private Integer pricePerHourCents; 
 
     public TutorSubjectDTO() {}
 

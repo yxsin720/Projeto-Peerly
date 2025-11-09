@@ -1,4 +1,3 @@
-// models/dto/TutorSlimDto.java
 package com.peerly.peerly_server.models.dto;
 
 public class TutorSlimDto {

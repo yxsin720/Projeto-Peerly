@@ -32,6 +32,9 @@ public class User {
   @Column(nullable = false, length = 10)
   private String language = "pt";
 
+  @Column(name = "area", length = 60)
+  private String area;
+
   @Column(name = "created_at", insertable = false, updatable = false)
   private Instant createdAt;
 
@@ -43,7 +46,6 @@ public class User {
     if (id == null || id.isBlank()) id = UUID.randomUUID().toString();
   }
 
-  // Getters & Setters
   public String getId() { return id; }
   public void setId(String id) { this.id = id; }
   public String getEmail() { return email; }
@@ -58,6 +60,8 @@ public class User {
   public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
   public String getLanguage() { return language; }
   public void setLanguage(String language) { this.language = language; }
+  public String getArea() { return area; }
+  public void setArea(String area) { this.area = area; }
   public Instant getCreatedAt() { return createdAt; }
   public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
   public Instant getUpdatedAt() { return updatedAt; }

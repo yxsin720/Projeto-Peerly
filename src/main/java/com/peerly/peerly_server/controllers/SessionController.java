@@ -1,4 +1,3 @@
-// controllers/SessionController.java
 package com.peerly.peerly_server.controllers;
 
 import com.peerly.peerly_server.models.Session;
@@ -18,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/sessions") // <- prefixo igual ao resto da API
+@RequestMapping("/api/sessions")
 @CrossOrigin
 public class SessionController {
 
@@ -52,7 +51,7 @@ public class SessionController {
       return ResponseEntity.badRequest().body(Map.of("error", "endsAt deve ser depois de startsAt"));
     }
 
-    // cria a sessão
+    
     Session s = new Session();
     s.setId(UUID.randomUUID().toString());
     s.setTutorId(data.tutorId());
@@ -67,7 +66,7 @@ public class SessionController {
 
     Session saved = service.create(s);
 
-    // opcional: associa o aluno que agendou
+   
     if (data.studentId() != null && !data.studentId().isBlank()) {
       if (!participants.existsBySessionIdAndUserId(saved.getId(), data.studentId())) {
         SessionParticipant sp = new SessionParticipant();
@@ -93,7 +92,7 @@ public class SessionController {
         .orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  /* helper: mapeia para DTO enriquecido com info do tutor */
+  
   private SessionDto toDto(Session s) {
     var dto = new SessionDto();
     dto.setId(s.getId());

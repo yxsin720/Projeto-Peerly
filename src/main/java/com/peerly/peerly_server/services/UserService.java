@@ -42,7 +42,7 @@ public class UserService {
         final String plain = req.getPassword();
         return found.filter(u -> {
             String stored = u.getPasswordHash();
-            return stored != null && stored.equals(plain); // DEV: sem hashing
+            return stored != null && stored.equals(plain); 
         });
     }
 }

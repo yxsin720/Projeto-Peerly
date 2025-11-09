@@ -7,7 +7,7 @@ public class UpdateUserRequest {
     public String email;
     public String passwordHash;
     public String fullName;
-    public String role;       // "student" | "tutor" | "both" | "admin"
+    public String role;       
     public String avatarUrl;
-    public String language;   // "pt" | "en" | ...
+    public String language;   
 }

@@ -7,8 +7,8 @@ import java.time.OffsetDateTime;
 public class TutorTimeOff {
   @Id @Column(length=36) private String id;
   @Column(name="tutor_id", length=36, nullable=false) private String tutorId;
-  @Column(name="start_at", nullable=false) private OffsetDateTime startAt; // UTC
-  @Column(name="end_at", nullable=false) private OffsetDateTime endAt;     // UTC
+  @Column(name="start_at", nullable=false) private OffsetDateTime startAt; 
+  @Column(name="end_at", nullable=false) private OffsetDateTime endAt;     
   @Column(length=255) private String reason;
-  // getters/setters
+
 }

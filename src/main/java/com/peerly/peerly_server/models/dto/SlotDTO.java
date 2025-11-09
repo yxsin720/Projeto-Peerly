@@ -2,12 +2,12 @@ package com.peerly.peerly_server.models.dto;
 
 public class SlotDTO {
     private String id;
-    private int weekday;        // 0..6
-    private String startTime;   // "HH:mm:ss"
-    private String endTime;     // "HH:mm:ss"
-    private String timezone;    // ex: "Europe/Lisbon"
+    private int weekday;        
+    private String startTime;   
+    private String endTime;     
+    private String timezone;   
 
-    // ✅ Construtor vazio (obrigatório para JSON)
+  
     public SlotDTO() {}
 
   

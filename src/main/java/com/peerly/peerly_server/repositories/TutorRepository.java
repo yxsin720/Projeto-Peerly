@@ -1,4 +1,3 @@
-// repositories/TutorRepository.java
 package com.peerly.peerly_server.repositories;
 
 import com.peerly.peerly_server.models.Tutor;

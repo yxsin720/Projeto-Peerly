@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.nio.file.*;
 import java.util.List;
@@ -27,16 +26,12 @@ public class UserController {
     this.repo = repo;
   }
 
-  /* -------- CRUD básico -------- */
-
   @GetMapping
   public List<User> getAll() { return repo.findAll(); }
 
   @GetMapping("/{id}")
   public ResponseEntity<User> getOne(@PathVariable String id) {
-    return repo.findById(id)
-        .map(ResponseEntity::ok)
-        .orElseGet(() -> ResponseEntity.notFound().build());
+    return repo.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
   @PostMapping
@@ -48,6 +43,7 @@ public class UserController {
     String avatarUrl    = asString(body.get("avatarUrl"));
     String language     = defaultOr(asString(body.get("language")), "pt");
     String roleStr      = asString(body.get("role"));
+    String area         = asString(body.get("area"));
 
     if (isBlank(email) || isBlank(fullName) || isBlank(passwordHash)) {
       return badRequest("Campos obrigatórios: email, fullName, passwordHash");
@@ -62,12 +58,11 @@ public class UserController {
     u.setPasswordHash(passwordHash);
     u.setAvatarUrl(avatarUrl);
     u.setLanguage(language);
+    u.setArea(area);
 
     if (!isBlank(roleStr)) {
       try { u.setRole(User.Role.valueOf(roleStr)); }
-      catch (IllegalArgumentException ex) {
-        return badRequest("role inválido. Use: student | tutor | both | admin");
-      }
+      catch (IllegalArgumentException ex) { return badRequest("role inválido. Use: student | tutor | both | admin"); }
     }
 
     User saved = repo.save(u);
@@ -86,9 +81,7 @@ public class UserController {
       String newEmail = asString(body.get("email"));
       if (isBlank(newEmail)) return badRequest("email não pode ser vazio");
       var other = repo.findByEmailIgnoreCase(newEmail);
-      if (other.isPresent() && !other.get().getId().equals(id)) {
-        return conflict("Email já usado por outro utilizador");
-      }
+      if (other.isPresent() && !other.get().getId().equals(id)) return conflict("Email já usado por outro utilizador");
       u.setEmail(newEmail);
     }
 
@@ -96,14 +89,13 @@ public class UserController {
     if (body.containsKey("passwordHash")) u.setPasswordHash(asString(body.get("passwordHash")));
     if (body.containsKey("avatarUrl"))    u.setAvatarUrl(asString(body.get("avatarUrl")));
     if (body.containsKey("language"))     u.setLanguage(defaultOr(asString(body.get("language")), "pt"));
+    if (body.containsKey("area"))         u.setArea(asString(body.get("area")));
 
     if (body.containsKey("role")) {
       String roleStr = asString(body.get("role"));
       if (!isBlank(roleStr)) {
         try { u.setRole(User.Role.valueOf(roleStr)); }
-        catch (IllegalArgumentException ex) {
-          return badRequest("role inválido. Use: student | tutor | both | admin");
-        }
+        catch (IllegalArgumentException ex) { return badRequest("role inválido. Use: student | tutor | both | admin"); }
       }
     }
 
@@ -118,8 +110,6 @@ public class UserController {
     return ResponseEntity.noContent().build();
   }
 
-  /* -------- Upload de Avatar -------- */
-
   @PostMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Transactional
   public ResponseEntity<?> uploadAvatar(
@@ -131,21 +121,16 @@ public class UserController {
     if (opt.isEmpty()) return ResponseEntity.notFound().build();
     if (file == null || file.isEmpty()) return badRequest("Ficheiro vazio.");
 
-    // raiz configurável (-Dpeerly.upload-dir=...)
     String root = System.getProperty("peerly.upload-dir", "uploads");
     Path uploadRoot = Paths.get(root).toAbsolutePath().normalize();
     Path avatarsDir = uploadRoot.resolve("avatars");
 
     try {
       Files.createDirectories(avatarsDir);
-
       String ext = safeExt(file.getOriginalFilename());
       String filename = "avatar_" + id + "_" + System.currentTimeMillis() + ext;
-
       Path dest = avatarsDir.resolve(filename);
       Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
-
-      // URL pública coerente com o WebConfig (/files/**)
       String publicUrl = ServletUriComponentsBuilder
           .fromCurrentContextPath()
           .path("/files/avatars/")
@@ -161,8 +146,6 @@ public class UserController {
       return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
     }
   }
-
-  /* -------- helpers -------- */
 
   private static String asString(Object v) { return v == null ? null : String.valueOf(v); }
   private static String defaultOr(String v, String d) { return isBlank(v) ? d : v; }
@@ -186,4 +169,3 @@ public class UserController {
     return ResponseEntity.status(409).body(Map.of("error", msg));
   }
 }
-

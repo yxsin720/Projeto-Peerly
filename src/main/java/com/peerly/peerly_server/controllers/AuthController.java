@@ -37,7 +37,7 @@ public class AuthController {
     String stored = user.getPasswordHash();
     if (stored == null || !stored.equals(password)) return unauthorized();
 
-    // devolve exatamente o “shape” que o app espera (UserResponse)
+   
     UserPublicDto dto = new UserPublicDto(
         user.getId(),
         user.getEmail(),

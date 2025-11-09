@@ -1,4 +1,3 @@
-// models/dto/CreateSessionRequest.java
 package com.peerly.peerly_server.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
