@@ -1,91 +1,78 @@
 # Proposta Inicial
 
-## Nome do Projeto
+### Nome do Projeto
 Peerly
 
-## Ideia Central
+### Ideia Central
 O Peerly é uma aplicação móvel de aprendizagem colaborativa (peer-to-peer) que conecta estudantes com interesses e competências complementares.  
-Através de perfis personalizados, os utilizadores podem encontrar colegas, agendar sessões de estudo, trocar mensagens e realizar videochamadas, criando uma rede académica dinâmica e acessível.
+Através de perfis personalizados, os utilizadores podem encontrar colegas, agendar sessões de estudo e trocar mensagens, criando uma rede académica dinâmica e acessível.
 
-## Motivação
+### Motivação
 A dificuldade em encontrar colegas com competências específicas limita a colaboração e o desenvolvimento académico.  
-O Peerly surge como resposta a este desafio, promovendo uma comunidade digital que valoriza a partilha de conhecimento, incentiva a cooperação e fortalece o crescimento pessoal e coletivo.
+O Peerly surge como resposta a esse desafio, promovendo uma comunidade digital que valoriza a partilha de conhecimento e o crescimento conjunto entre estudantes.
 
-## Objetivos Gerais
+---
+
+## Objetivos do Projeto
+
+### Gerais
 - Aproximar estudantes com interesses e necessidades comuns.  
-- Facilitar a troca de conhecimento de forma rápida, intuitiva e segura.  
-- Disponibilizar ferramentas de comunicação integradas (chat e vídeo).  
-- Contribuir para o desenvolvimento de competências individuais e para a criação de uma rede de apoio académico.
+- Facilitar a troca de conhecimento de forma intuitiva e segura.  
+- Criar uma rede de apoio académico colaborativo.
 
-## Enquadramento do Projeto
-
-O **Pearly** é uma aplicação móvel que promove a ajuda entre estudantes através da criação de perfis pessoais, onde cada utilizador indica as suas capacidades, interesses e áreas de estudo.  
-Outros estudantes podem aceder a estes perfis para trocar conhecimentos, enviar mensagens e realizar chamadas de vídeo.
-
-O problema identificado é a dificuldade em encontrar colegas com competências complementares, dentro ou fora do contexto académico, o que limita oportunidades de colaboração, estudo conjunto e desenvolvimento de novas capacidades.
+### Específicos
+- Permitir a criação de perfis personalizados com áreas de interesse.  
+- Promover o emparelhamento entre estudantes e tutores.  
+- Disponibilizar ferramentas de comunicação e agendamento de sessões.
 
 ---
 
-### Objetivos e Motivação
-
-A motivação principal reside na importância da cooperação académica e no potencial de criar uma comunidade digital de aprendizagem colaborativa.  
-Os objetivos do projeto são:
-
-- Criar uma plataforma intuitiva que aproxime estudantes com interesses comuns.  
-- Incentivar a troca de conhecimento de forma acessível, rápida e segura.  
-- Oferecer ferramentas de comunicação integradas (chat e vídeo).  
-- Contribuir para a valorização das competências individuais de cada estudante.  
+## Público-Alvo
+Estudantes universitários e do ensino secundário que procuram apoio em áreas específicas de estudo ou desejam partilhar as suas competências com outros colegas.
 
 ---
 
-### Público-Alvo
+## Pesquisa de Mercado
+O Peerly diferencia-se por centrar-se exclusivamente em estudantes e no conceito de troca direta de competências.  
+Foram analisadas algumas plataformas com propósitos semelhantes:
 
-O público-alvo principal são **estudantes universitários e do ensino secundário** que procuram apoio em áreas específicas de estudo ou que desejam partilhar e praticar as suas competências com colegas.
-
----
-
-### Pesquisa de Mercado
-
-O **Pearly** diferencia-se ao centrar-se exclusivamente em estudantes e no conceito de troca de competências direta (peer-to-peer).  
-Foram analisadas algumas plataformas de networking académico e profissional, como:
-
-- **LinkedIn** → Focado em networking profissional, mas pouco direcionado para estudantes em fase de aprendizagem.  
-- **Discord/Slack** → Utilizados em comunidades, mas pouco organizados em torno de perfis de competências individuais.  
-- **Skillshare** → Orientado para cursos estruturados, não para colaboração direta entre estudantes.
-
-# Project Charter
-
-## 1. Missão
-Facilitar a troca de conhecimento entre pessoas através de uma aplicação mobile peer‑to‑peer, permitindo que qualquer utilizador possa aprender e ensinar em áreas como programação, design e matemática, com recurso a chat e videochamadas.
-
-## 2. Visão
-Tornar‑se a plataforma de referência para aprendizagem colaborativa, onde qualquer pessoa pode partilhar competências e adquirir novos conhecimentos de forma simples, acessível e interativa.
+- **LinkedIn:** voltado para o mercado profissional.  
+- **Discord/Slack:** utilizados em comunidades, mas pouco estruturados por áreas de estudo.  
+- **Skillshare:** orientado para cursos formais e não para colaboração direta entre estudantes.
 
 ---
 
-# Escopo do Projeto
+## Missão e Visão
 
-## 3. Objetivo
-Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entre estudantes, permitindo a criação de perfis, definição de áreas de interesse e emparelhamento entre pares para sessões de estudo.
+**Missão:**  
+Facilitar a troca de conhecimento entre estudantes através de uma aplicação peer-to-peer, permitindo que qualquer utilizador possa aprender e ensinar nas suas áreas de interesse.
 
-## 4. Funcionalidades Incluídas (In Scope)
+**Visão:**  
+Tornar-se uma plataforma de referência em aprendizagem colaborativa, promovendo partilha, acessibilidade e crescimento académico.
+
+---
+
+## Escopo do Projeto
+
+**Objetivo:**  
+Desenvolver uma aplicação móvel que promova a aprendizagem colaborativa entre estudantes, permitindo a criação de perfis, definição de áreas de interesse e emparelhamento entre pares para sessões de estudo.
+
+**Funcionalidades Incluídas:**  
 - Registo e autenticação de utilizadores  
-- Criação e edição de perfil com áreas de interesse  
-- Emparelhamento entre utilizadores com base em interesses comuns  
-- Comunicação via chat em tempo real  
-- Funcionalidade básica de videochamada  
-- Gestão de sessões de aprendizagem (agendamento e estado)  
-- Backend com API REST e base de dados relacional  
+- Criação e edição de perfis  
+- Emparelhamento entre utilizadores  
+- Chat em tempo real  
+- Agendamento de sessões  
 
-## 5. Funcionalidades Excluídas (Out of Scope)
-- Sistema de gamificação (badges, pontos, rankings)  
+**Funcionalidades Excluídas:**  
+- Sistema de gamificação  
 - Integração com redes sociais externas  
-- Suporte a múltiplas plataformas (apenas Android será desenvolvido)  
-- Funcionalidades avançadas de videochamada (gravação, partilha de ecrã)  
+- Suporte a outras plataformas além de Android  
+- Videochamadas avançadas  
 
 ---
 
-# Entregáveis da 1ª Entrega
+## Entregáveis da 1ª Entrega
 - Estrutura inicial do repositório GitHub  
 - Mockups organizados por ecrã  
 - Modelo de domínio visual  
@@ -95,213 +82,161 @@ Desenvolver uma aplicação mobile que facilite a aprendizagem colaborativa entr
 
 ---
 
-# Objetivos da Peerly
+## Estrutura de Trabalho (WBS)
 
-### Funcionais
-- Criar perfis com áreas de interesse  
-- Emparelhar utilizadores com interesses comuns  
-- Comunicar por chat e realizar videochamadas  
-
-### Técnicos
-- App Android em Kotlin/Jetpack Compose  
-- Backend em Spring Boot com base de dados relacional  
-- Comunicação via API REST documentada  
-
-### De processo
-- Organização em ClickUp  
-- Versionamento e documentação no GitHub   
+| Categoria | Tarefa | Responsável |
+|------------|---------|-------------|
+| Gestão do Projeto | Organização no ClickUp | Todos |
+|  | Casos de utilização | Francisco Baptista |
+|  | Estruturação do repositório (GitHub) | Yassin Mac-Arthur |
+|  | Relatório final | Yassin Mac-Arthur |
+| Design e Documentação | Criação do poster | Francisco Silva |
+|  | Planeamento e Gantt | Nayuka Malebo |
+|  | Modelo de domínio | Yassin Mac-Arthur |
+| Desenvolvimento Técnico | Mockups e UI/UX | Francisco Baptista |
 
 ---
-
-# Stakeholders
-
-### Equipa do Projeto
-- Francisco Baptista
-- Francisco Silva
-- Nayuka Malebo
-- Yassin Mac-Arthur
-
-### Docentes Envolvidos
-- Pedro Rosa  
-- Nathan Campos  
-
-### Utilizadores Finais
-- Estudantes universitários e do ensino secundário  
-
----
-
-# Critérios de Sucesso (1ª Entrega)
-- Repositório organizado com pastas e ficheiros conforme requisitos  
-- Mockups completos e integrados no relatório  
-- Modelo de domínio visual entregue e referenciado  
-- Gráfico de Gantt incluído e contextualizado  
-- Poster criado e disponível  
-- Documentação clara e em formato Markdown  
-
----
-
-# Work Breakdown Structure (WBS)
-
-## 1. Gestão do Projeto
-- Organização do trabalho em ClickUp — Todos  
-- Casos de utilização — Francisco Baptista  
-- Estruturação do repositório (GitHub) — Yassin Mac‑Arthur  
-- Relatório final — Yassin Mac‑Arthur  
-
-## 2. Design e Documentação
-- Criação do poster — Francisco Silva  
-- Planeamento e Gantt — Nayuka Malebo  
-- Modelo de domínio — Yassin Mac‑Arthur  
-
-## 3. Desenvolvimento Técnico
-- Mockups e interfaces (UI/UX) — Francisco Baptista
 
 ## Requisitos Funcionais
 
-Os requisitos funcionais definem as operações essenciais que a aplicação deverá disponibilizar aos seus utilizadores:
-
 1. **Registo e Autenticação**  
-   O sistema deve permitir a criação de contas de utilizador, a autenticação segura de credenciais e a recuperação de palavras‑passe.
+   O sistema deve permitir a criação de contas de utilizador, a autenticação segura de credenciais e a recuperação de palavras-passe.
 
 2. **Gestão de Perfil**  
    O utilizador deve poder editar os seus dados pessoais, indicar áreas de interesse e atualizar elementos visuais do perfil (fotografia e descrição).
 
 3. **Emparelhamento de Utilizadores**  
-   A aplicação deve disponibilizar um mecanismo de correspondência entre estudantes e tutores, com base nas áreas de interesse previamente definidos.
+   A aplicação deve disponibilizar um mecanismo de correspondência entre estudantes e tutores, com base nas áreas de interesse previamente definidas.
 
 4. **Agendamento de Sessões**  
    O sistema deve possibilitar a marcação de sessões de tutoria em datas e horários específicos, notificando o tutor selecionado para confirmação.
 
 5. **Comunicação**  
-   A aplicação deve suportar comunicação síncrona através de mensagens em tempo real (chat) e de chamadas de vídeo em formato básico.
+   A aplicação deve suportar comunicação em tempo real através de chat e chamadas de vídeo básicas.
 
 6. **Avaliação e Feedback**  
-   Após a conclusão de uma sessão, o utilizador deve poder avaliar a experiência (através de um sistema de classificação) e fornecer comentários qualitativos, que ficarão associados ao perfil do par.
+   Após a conclusão de uma sessão, o utilizador deve poder avaliar a experiência e deixar comentários qualitativos que ficam associados ao perfil do par.
 
 ---
 
 ## Requisitos Não Funcionais
 
-Os requisitos não funcionais estabelecem as propriedades de qualidade e as restrições técnicas que o sistema deverá cumprir:
-
 1. **Usabilidade**  
-   A interface deve ser intuitiva, consistente e de fácil utilização, garantindo acessibilidade a utilizadores com diferentes níveis de literacia digital.
+   A interface deve ser intuitiva e de fácil utilização, garantindo acessibilidade a utilizadores com diferentes níveis de literacia digital.
 
 2. **Desempenho**  
-   O sistema deve assegurar tempos de resposta adequados, permitindo a troca de mensagens em tempo real com latência mínima e suportando múltiplos utilizadores em simultâneo sem degradação significativa do serviço.
+   O sistema deve assegurar tempos de resposta adequados, permitindo a troca de mensagens em tempo real sem atrasos significativos.
 
 3. **Segurança**  
-   As credenciais dos utilizadores devem ser armazenadas de forma encriptada (hashing de palavras‑passe) e todas as comunicações entre cliente e servidor devem ocorrer através de protocolos seguros (HTTPS).
+   As credenciais dos utilizadores devem ser armazenadas de forma encriptada e todas as comunicações entre cliente e servidor devem ser seguras.
 
 4. **Compatibilidade**  
-   A aplicação deverá ser compatível com dispositivos Android recentes (versão mínima a definir pela equipa) e o backend deverá disponibilizar serviços através de uma API REST devidamente documentada.
+   A aplicação deve ser compatível com dispositivos Android recentes e o backend deve disponibilizar serviços através de uma API REST.
 
 5. **Fiabilidade**  
-   O sistema deve garantir a persistência dos dados relativos a sessões agendadas. Em caso de falha de rede, deve permitir a recuperação da sessão ou o reenvio de mensagens não entregues.
+   O sistema deve garantir a persistência dos dados e permitir a recuperação de mensagens ou sessões em caso de falha.
 
 6. **Escalabilidade**  
-   A arquitetura da solução deve ser concebida de forma a permitir a evolução futura da plataforma, suportando um número crescente de utilizadores e a integração de novas funcionalidades sem necessidade de reestruturação completa.
-
-# Casos de Utilização — Peerly
+   A arquitetura deve permitir o crescimento futuro da plataforma, suportando mais utilizadores e novas funcionalidades.
 
 ---
 
-## UC1 – Agendar uma sessão de tutoria peer-to-peer (Core)
+## Casos de Utilização
 
-- **Ator principal:** Estudante (utilizador)  
-- **Objetivo:** Encontrar um tutor, combinar um horário e agendar sessão  
-- **Pré-condições:** O estudante tem conta ativa e está autenticado  
+### UC1 – Agendar uma Sessão de Tutoria Peer-to-Peer
+**Ator Principal:** Estudante  
+**Objetivo:** Encontrar um tutor, combinar um horário e agendar uma sessão.  
+**Pré-condições:** O estudante tem conta ativa e está autenticado.  
 
-**Fluxo principal:**
+**Fluxo Principal:**
 1. O estudante abre a aplicação e seleciona “Encontrar tutor”.  
 2. Pesquisa por disciplina (ex.: Matemática).  
 3. Visualiza a lista de tutores disponíveis.  
-4. Seleciona um tutor e consulta o perfil e disponibilidade.  
+4. Seleciona um tutor e consulta o perfil.  
 5. Agenda sessão para data/hora específica.  
 6. O tutor recebe notificação e confirma.  
-7. A sessão aparece na agenda de ambos.  
-
-- **Pós-condições:** Sessão registada no sistema e visível na agenda de estudante e tutor.  
-- **Observação:** Este é o caso de utilização central da Peerly, pois representa a função principal de conectar pares para aprender/ensinar.  
+7. A sessão é registada no sistema.  
 
 ---
 
-## UC2 – Participar numa sessão agendada
+### UC2 – Participar numa Sessão Agendada
+**Atores Principais:** Estudante e Tutor  
+**Objetivo:** Realizar a sessão de tutoria previamente combinada.  
+**Pré-condições:** Sessão confirmada e registada no sistema.  
 
-- **Atores principais:** Estudante / Tutor  
-- **Objetivo:** Realizar a sessão de tutoria previamente combinada  
-- **Pré-condições:** Sessão confirmada e registada na agenda  
-
-**Fluxo principal:**
-1. O utilizador recebe notificação de que a sessão vai começar.  
-2. Abre a aplicação e acede à secção “Sessões”.  
+**Fluxo Principal:**
+1. O utilizador recebe notificação da sessão.  
+2. Acede à secção “Sessões”.  
 3. Entra na sessão agendada.  
-4. A sessão decorre (via videochamada, chat ou presencial, dependendo da versão).  
-5. No final, a aplicação regista a sessão como concluída.  
-
-- **Pós-condições:** Sessão marcada como concluída no sistema.  
+4. A sessão decorre via videochamada ou chat.  
+5. No final, é marcada como concluída.
 
 ---
 
-## UC3 – Avaliar e dar feedback após sessão
+### UC3 – Avaliar e Dar Feedback Após Sessão
+**Atores Principais:** Estudante e Tutor  
+**Objetivo:** Avaliar a qualidade da sessão e do par.  
+**Pré-condições:** Sessão concluída.  
 
-- **Atores principais:** Estudante e Tutor  
-- **Objetivo:** Avaliar a qualidade da sessão e do par (tutor/estudante)  
-- **Pré-condições:** Sessão concluída  
-
-**Fluxo principal:**
+**Fluxo Principal:**
 1. Após a sessão, a aplicação apresenta o ecrã de feedback.  
 2. O utilizador atribui uma classificação (1 a 5 estrelas).  
-3. O utilizador pode adicionar um comentário opcional.  
-4. O feedback fica associado ao perfil do tutor/estudante.  
-5. O sistema atualiza a reputação e melhora as sugestões futuras.  
-
-- **Pós-condições:** Feedback registado e associado ao perfil do utilizador avaliado.  
-
-
-# Guiões de Teste
+3. Adiciona comentário opcional.  
+4. O feedback é registado e associado ao perfil avaliado.  
 
 ---
 
-## GT1 – Criar conta na aplicação
+## Guiões de Teste
+
+### GT1 – Criar Conta
 **Objetivo:** Validar o processo de registo de um novo utilizador.  
-**Pré-condições:** O utilizador não tem conta criada.  
+**Pré-condição:** O utilizador não tem conta criada.  
 
 **Passos:**
 1. O utilizador abre a aplicação Peerly.  
-2. Seleciona a opção “Criar conta”.  
-3. Introduz nome completo, email e palavra-passe.  
-4. Confirma os dados e clica em “Registar”.  
-5. O sistema apresenta mensagem de sucesso e redireciona para o ecrã inicial.  
+2. Seleciona “Criar conta”.  
+3. Introduz nome, email e palavra-passe.  
+4. Confirma e clica em “Registar”.  
+5. O sistema confirma a criação da conta.  
 
-**Resultado esperado:** Conta criada com sucesso e utilizador autenticado.
+**Resultado Esperado:** Conta criada com sucesso e utilizador autenticado.
 
 ---
 
-## GT2 – Agendar sessão de tutoria
+### GT2 – Agendar Sessão de Tutoria
 **Objetivo:** Validar o agendamento de uma sessão peer-to-peer.  
-**Pré-condições:** O utilizador tem conta ativa e está autenticado.  
+**Pré-condição:** O utilizador tem conta ativa e está autenticado.  
 
 **Passos:**
-1. O utilizador abre a aplicação e seleciona “Encontrar tutor”.  
-2. Pesquisa por disciplina (ex.: Matemática).  
-3. Escolhe um tutor da lista e consulta o perfil.  
-4. Seleciona data e hora disponíveis.  
-5. Confirma o agendamento.  
+1. O utilizador abre a aplicação.  
+2. Pesquisa por disciplina e escolhe um tutor.  
+3. Seleciona data e hora disponíveis.  
+4. Confirma o agendamento.  
 
-**Resultado esperado:** Sessão registada na agenda do utilizador e notificação enviada ao tutor.
+**Resultado Esperado:** Sessão registada e notificação enviada ao tutor.
 
 ---
 
-## GT3 – Dar feedback após sessão
+### GT3 – Dar Feedback Após Sessão
 **Objetivo:** Validar o processo de avaliação de uma sessão concluída.  
-**Pré-condições:** O utilizador participou numa sessão agendada.  
+**Pré-condição:** O utilizador participou numa sessão agendada.  
 
 **Passos:**
-1. Após a sessão, a aplicação apresenta o ecrã de feedback.  
-2. O utilizador atribui uma classificação (1 a 5 estrelas).  
-3. Opcionalmente, escreve um comentário.  
-4. Submete o feedback.  
+1. Após a sessão, é apresentado o ecrã de feedback.  
+2. O utilizador atribui uma classificação e comentário.  
+3. Submete a avaliação.  
 
-**Resultado esperado:** Feedback registado e associado ao perfil do tutor/estudante avaliado.
+**Resultado Esperado:** Feedback registado e associado ao perfil do tutor/estudante avaliado.
+
+---
+
+## Equipa do Projeto
+- Francisco Baptista  
+- Francisco Silva  
+- Nayuka Malebo  
+- Yassin Mac-Arthur
+
+**Docentes:**  
+Pedro Rosa  
+Nathan Campos  
 
