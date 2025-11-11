@@ -7,5 +7,5 @@ data class UserCreateRequest(
     val passwordHash: String,
     val avatarUrl: String? = null,
     val language: String? = "pt",
-    val role: String? = null // "student" | "tutor" | "both" | "admin"
+    val role: String? = null
 )

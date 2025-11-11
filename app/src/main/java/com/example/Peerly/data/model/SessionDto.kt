@@ -1,4 +1,3 @@
-// data/model/SessionDto.kt
 package com.example.Peerly.data.model
 
 data class SessionDto(
@@ -7,7 +6,7 @@ data class SessionDto(
     val subjectId: String? = null,
     val title: String? = null,
     val description: String? = null,
-    val startsAt: String? = null,   // já vem como ISO no backend
+    val startsAt: String? = null,
     val endsAt: String? = null,
     val createdAt: String? = null,
     val status: String? = null,

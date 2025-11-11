@@ -24,9 +24,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.Peerly.R
 import com.example.Peerly.data.RetrofitInstance
@@ -37,6 +39,7 @@ import com.example.Peerly.scheduling.TimeWindow
 import com.example.Peerly.scheduling.availableTimesFor
 import com.example.Peerly.sessions.SessionRepository
 import com.example.Peerly.sessions.SessionUi
+import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -383,3 +386,12 @@ private fun ConfirmButton(enabled: Boolean, onClick: () -> Unit) {
         Text("Confirmar sessão", color = Color(0xFF141414), fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
     }
 }
+
+@Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
+@Composable
+private fun AgendarSessaoScreenPreview() {
+    MyApplicationPeerly4Theme {
+        AgendarSessaoScreen(navController = rememberNavController())
+    }
+}
+

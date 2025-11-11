@@ -277,3 +277,4 @@ private fun AvailabilitySection(
         Text("Sex 14h–16h", color = Color.White.copy(alpha = 0.9f), fontSize = bodySize)
     }
 }
+

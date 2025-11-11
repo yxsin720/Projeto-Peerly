@@ -17,6 +17,9 @@ import androidx.navigation.NavController
 import com.example.Peerly.R
 import kotlinx.coroutines.delay
 import androidx.compose.material3.Text
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 
 @Composable
 fun SplashScreen(
@@ -60,5 +63,13 @@ fun SplashScreen(
                 }
             }
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
+@Composable
+private fun SplashScreenPreview() {
+    MyApplicationPeerly4Theme {
+        SplashScreen(navController = rememberNavController())
     }
 }

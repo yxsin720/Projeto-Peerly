@@ -18,12 +18,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.Peerly.R
 import com.example.Peerly.data.AuthRepository
 import com.example.Peerly.session.UserSession
+import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -262,5 +265,13 @@ fun CriarContaScreen(navController: NavController) {
 
             Spacer(Modifier.height(8.dp))
         }
+    }
+}
+
+@Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
+@Composable
+private fun CriarContaPreviewPreview() {
+    MyApplicationPeerly4Theme {
+        CriarContaScreen(navController = rememberNavController())
     }
 }

@@ -11,7 +11,7 @@ data class SessionUi(
     val subject: String,
     val start: LocalDateTime,
     val end: LocalDateTime,
-    val avatarUrl: String? // URL da foto do(a) tutor(a) (local ou remota)
+    val avatarUrl: String?
 ) {
     val durationMinutes: Long get() = Duration.between(start, end).toMinutes()
 }
