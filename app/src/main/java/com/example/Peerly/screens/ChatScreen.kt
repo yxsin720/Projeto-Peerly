@@ -71,11 +71,9 @@ fun ChatScreen(
     val repo = ChatRepository
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-
     val currentUser = UserSession.currentUser
     val currentUserId = currentUser?.id
     val isTutor = currentUser?.role == "tutor" || currentUser?.role == "both"
-    val isStudent = currentUser?.role == "student"
 
     var input by remember { mutableStateOf("") }
     var messages by remember { mutableStateOf<List<ChatMessageDto>>(emptyList()) }
@@ -83,7 +81,7 @@ fun ChatScreen(
     var avatarUrl by remember { mutableStateOf(tutorAvatarUrl) }
     var headerName by remember {
         mutableStateOf(
-            tutorName?.takeIf { it.isNotBlank() && it != "Tutor(a)" }
+            tutorName?.takeIf { it.isNotBlank() } ?: "Sessão de Tutoria"
         )
     }
 
@@ -106,23 +104,25 @@ fun ChatScreen(
     LaunchedEffect(sessionId, allSessions, isTutor) {
         val session = allSessions.firstOrNull { it.id == sessionId }
         if (session != null) {
-
-            if (isTutor) {
-                if (session.subject.isNotBlank()) {
-                    headerName = session.subject
-                }
+            val otherName = if (isTutor) {
+                session.studentName ?: "Aluno(a)"
             } else {
-                if (headerName.isNullOrBlank() || headerName == "Tutor(a)") {
-                    if (session.tutorName.isNotBlank()) {
-                        headerName = session.tutorName
-                    }
-                }
+                session.tutorName
             }
 
-            if (avatarUrl.isNullOrBlank()) {
-                avatarUrl = session.avatarUrl
-                if (avatarUrl.isNullOrBlank() && session.tutorId != null) {
-                    val local = readTutorPhoto(context, session.tutorId!!)
+            val subject = session.subject.ifBlank { "Sessão" }
+            headerName = "${subject.uppercase()} com $otherName"
+
+            avatarUrl = if (isTutor) {
+                session.studentAvatarUrl ?: avatarUrl
+            } else {
+                session.avatarUrl ?: avatarUrl
+            }
+
+            if (!isTutor && avatarUrl.isNullOrBlank()) {
+                val tid = session.tutorId
+                if (tid != null) {
+                    val local = readTutorPhoto(context, tid)
                     if (!local.isNullOrBlank()) {
                         avatarUrl = local
                     }
@@ -140,7 +140,7 @@ fun ChatScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 10.dp),
+                .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
@@ -163,7 +163,7 @@ fun ChatScreen(
                     contentScale = ContentScale.Crop
                 )
             } else {
-                val initial = (headerName?.firstOrNull() ?: 'S').toString()
+                val initial = (headerName.firstOrNull() ?: 'M').toString()
                 Box(
                     modifier = Modifier
                         .size(40.dp)
@@ -182,9 +182,12 @@ fun ChatScreen(
 
             Spacer(Modifier.width(10.dp))
 
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+            ) {
                 Text(
-                    headerName ?: "Sessão de Tutoria",
+                    headerName,
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -202,10 +205,10 @@ fun ChatScreen(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.clickable {
-                    if (isStudent == true) {
-                        navController.navigate("review/$sessionId")
-                    } else {
+                    if (isTutor) {
                         navController.popBackStack()
+                    } else {
+                        navController.navigate("review/$sessionId")
                     }
                 }
             )

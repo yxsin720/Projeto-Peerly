@@ -145,10 +145,8 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-    // Fotos dos tutores “seed”
     LaunchedEffect(Unit) { loadPersistedPhotos() }
 
-    // Recarrega fotos quando voltar para o ecrã
     DisposableEffect(lifecycleOwner) {
         val obs = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
@@ -159,9 +157,7 @@ fun HomeScreen(navController: NavController) {
         onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
     }
 
-    // Buscar sessões do backend (para o utilizador atual)
     LaunchedEffect(isTutor) {
-        // Mesmo que não seja tutor, isto enche o SessionRepository para outros ecrãs.
         try {
             SessionRepository.refreshFromBackend()
         } catch (_: Exception) {
@@ -170,11 +166,13 @@ fun HomeScreen(navController: NavController) {
 
     val allSessions by SessionRepository.sessions.collectAsState()
 
-    // Sessões onde o utilizador é o tutor (independentemente do status “scheduled/created”).
     val myTutorSessions: List<SessionUi> =
         remember(allSessions, currentUser?.id) {
             if (currentUser == null) emptyList()
-            else allSessions.filter { it.tutorId == currentUser.id && it.status.lowercase(Locale.ROOT) != "finished" }
+            else allSessions.filter {
+                it.tutorId == currentUser.id &&
+                        it.status.lowercase(Locale.ROOT) != "finished"
+            }
         }
 
     Column(
@@ -191,17 +189,20 @@ fun HomeScreen(navController: NavController) {
         Spacer(Modifier.height(28.dp))
 
         if (isTutor) {
-            // Vês as tuas sessões como tutor
             TutorSessionsSection(
                 sessions = myTutorSessions,
                 onOpenSession = { session ->
-                    val title = Uri.encode("Sessão de ${session.subject}")
-                    val avatar = Uri.encode(session.avatarUrl ?: "")
-                    navController.navigate("chat/${session.id}?tutorName=$title&avatarUrl=$avatar")
+                    val otherName = session.studentName ?: "Aluno(a)"
+                    val subjectLabel = extractSubjectLabel(session.subject)
+                    val chatTitle = "${subjectLabel.uppercase(Locale.ROOT)} com $otherName"
+                    val avatar = Uri.encode(session.studentAvatarUrl ?: session.avatarUrl ?: "")
+                    val titleEncoded = Uri.encode(chatTitle)
+                    navController.navigate(
+                        "chat/${session.id}?tutorName=$titleEncoded&avatarUrl=$avatar"
+                    )
                 }
             )
         } else {
-            // Alunos vêem sugestões de tutores
             SuggestionsSection(
                 tutors = seedTutors,
                 customPhotos = photoMap,
@@ -308,7 +309,7 @@ private fun ActionCards(navController: NavController) {
             title = "Ajudar colegas",
             imageResId = R.drawable.ajudar_colegas,
             modifier = Modifier.weight(1f),
-            onClick = { /* futuro: navegar para outro ecrã */ }
+            onClick = { }
         )
     }
 }
@@ -358,8 +359,6 @@ private fun ActionCard(
     }
 }
 
-/* ---------- Secção de sessões para tutor ---------- */
-
 @Composable
 private fun TutorSessionsSection(
     sessions: List<SessionUi>,
@@ -389,6 +388,10 @@ private fun TutorSessionsSection(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(sessions) { session ->
+                    val otherName = session.studentName ?: "Aluno(a)"
+                    val subjectLabel = extractSubjectLabel(session.subject)
+                    val title = "${subjectLabel.uppercase(Locale.ROOT)} com $otherName"
+
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -400,7 +403,7 @@ private fun TutorSessionsSection(
                             modifier = Modifier.padding(16.dp)
                         ) {
                             Text(
-                                text = session.subject,
+                                text = title,
                                 color = Color(0xFF111111),
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp
@@ -424,8 +427,6 @@ private fun TutorSessionsSection(
         }
     }
 }
-
-/* ---------- Secção de sugestões (para alunos) ---------- */
 
 @Composable
 private fun SuggestionsSection(
@@ -536,6 +537,9 @@ private suspend fun copyUriToInternal(ctx: Context, uri: Uri, fileName: String):
         }
         file
     }
+
+private fun extractSubjectLabel(raw: String): String =
+    raw.substringAfter("—", raw).trim().ifEmpty { raw }
 
 @Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
 @Composable

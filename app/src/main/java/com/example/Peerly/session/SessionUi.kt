@@ -14,7 +14,10 @@ data class SessionUi(
     val description: String?,
     val priceTotalCents: Int?,
     val createdAt: LocalDateTime,
-    val avatarUrl: String?
+    val avatarUrl: String?,
+    val studentId: String?,
+    val studentName: String?,
+    val studentAvatarUrl: String?
 ) {
     val durationMinutes: Long
         get() = Duration.between(start, end).toMinutes()

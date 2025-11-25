@@ -21,10 +21,8 @@ object SessionRepository {
     fun findById(id: String): SessionUi? =
         _sessions.value.firstOrNull { it.id == id }
 
-    /**
-     * Vai ao backend buscar UMA sessão, faz o toUi e atualiza a lista local.
-     * Devolve o SessionUi ou null se não existir.
-     */
+
+
     suspend fun fetchSessionFromBackend(id: String): SessionUi? {
         return try {
             val dto = api.getSessionById(id)

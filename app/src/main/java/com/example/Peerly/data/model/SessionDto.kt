@@ -21,21 +21,25 @@ data class SessionDto(
     val maxParticipants: Int?,
     val priceTotalCents: Int?,
     val createdAt: String?,
-    val tutor: TutorSlimDto?
+    val tutor: TutorSlimDto?,
+    val studentId: String? = null,
+    val studentName: String? = null,
+    val studentAvatarUrl: String? = null
 )
 
-/**
- * Ex.: "Sessão com Pedro Almeida — MATEMÁTICA"
- * devolve "MATEMÁTICA"
- */
-private fun extractSubjectFromTitle(title: String): String? {
-    val dashIndex = title.lastIndexOf('—')
-    if (dashIndex != -1 && dashIndex + 1 < title.length) {
-        return title.substring(dashIndex + 1)
-            .trim()
-            .takeIf { it.isNotEmpty() }
+private fun extractTutorNameFromTitle(title: String): String? {
+    val regex = Regex("Sessão com (.+?)(?:\\s*—|$)", RegexOption.IGNORE_CASE)
+    val match = regex.find(title) ?: return null
+    return match.groupValues.getOrNull(1)?.trim()?.takeIf { it.isNotEmpty() }
+}
+
+private fun extractSubjectFromTitle(title: String): String {
+    val parts = title.split("—")
+    if (parts.size >= 2) {
+        val subject = parts.last().trim()
+        if (subject.isNotEmpty()) return subject
     }
-    return null
+    return title
 }
 
 fun SessionDto.toUi(): SessionUi {
@@ -43,14 +47,19 @@ fun SessionDto.toUi(): SessionUi {
     val endTime = endsAt?.let { LocalDateTime.parse(it) } ?: startTime.plusMinutes(60)
     val createdAtTime = createdAt?.let { LocalDateTime.parse(it) } ?: startTime
 
-    val uiTutorName = tutor?.name?.takeIf { !it.isNullOrBlank() } ?: "Tutor(a)"
-    val uiAvatar = tutor?.avatarUrl
-
-    val uiSubject = when {
-        !title.isNullOrBlank() -> extractSubjectFromTitle(title) ?: "Sessão"
-        else -> "Sessão"
+    val uiTutorName = when {
+        !tutor?.name.isNullOrBlank() -> tutor!!.name!!
+        !title.isNullOrBlank() -> extractTutorNameFromTitle(title!!) ?: "Tutor(a)"
+        else -> "Tutor(a)"
     }
 
+    val uiSubject = if (!title.isNullOrBlank()) {
+        extractSubjectFromTitle(title!!)
+    } else {
+        "Sessão"
+    }
+
+    val uiAvatar = tutor?.avatarUrl
     val uiStatus = status ?: "scheduled"
 
     return SessionUi(
@@ -64,6 +73,9 @@ fun SessionDto.toUi(): SessionUi {
         description = description,
         priceTotalCents = priceTotalCents,
         createdAt = createdAtTime,
-        avatarUrl = uiAvatar
+        avatarUrl = uiAvatar,
+        studentId = studentId,
+        studentName = studentName,
+        studentAvatarUrl = studentAvatarUrl
     )
 }
