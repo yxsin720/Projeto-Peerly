@@ -4,6 +4,7 @@ import com.example.Peerly.data.model.ChatMessageDto
 import com.example.Peerly.data.model.CreateReviewRequest
 import com.example.Peerly.data.model.CreateSessionRequest
 import com.example.Peerly.data.model.LoginRequest
+import com.example.Peerly.data.model.MeetLinkResponse
 import com.example.Peerly.data.model.SendMessageRequest
 import com.example.Peerly.data.model.SessionDto
 import com.example.Peerly.data.model.UserCreateRequest
@@ -78,4 +79,9 @@ interface ApiService {
     suspend fun createReview(
         @Body body: CreateReviewRequest
     )
+
+    @POST("api/meet/sessions/{sessionId}")
+    suspend fun createMeetLink(
+        @Path("sessionId") sessionId: String
+    ): MeetLinkResponse
 }

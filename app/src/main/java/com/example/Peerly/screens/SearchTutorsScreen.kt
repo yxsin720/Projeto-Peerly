@@ -62,9 +62,6 @@ import com.example.Peerly.data.readTutorPhoto
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 
 
-// ----------------------------
-// LISTA BASE DOS TUTORES
-// ----------------------------
 private val searchSeedTutors = listOf(
     Tutor(
         id = "2d238e82-bc00-11f0-a9b0-c4efbbb92864",
@@ -73,7 +70,7 @@ private val searchSeedTutors = listOf(
         description = "Professor dedicado e paciente...",
         rating = 4.9,
         reviews = 128,
-        imageResId = R.drawable.pedro
+        imageResId = R.drawable.pedroalmeida
     ),
     Tutor(
         id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864",
@@ -82,7 +79,7 @@ private val searchSeedTutors = listOf(
         description = "Engenheira de software...",
         rating = 4.8,
         reviews = 96,
-        imageResId = R.drawable.erica
+        imageResId = R.drawable.ericasantos
     ),
     Tutor(
         id = "baddd584-b456-11f0-95be-c4efbbb92864",
@@ -91,7 +88,7 @@ private val searchSeedTutors = listOf(
         description = "Designer gráfica...",
         rating = 4.9,
         reviews = 100,
-        imageResId = R.drawable.rita
+        imageResId = R.drawable.ritafernandes
     ),
     Tutor(
         id = "bade1da4-b456-11f0-95be-c4efbbb92864",
@@ -100,7 +97,7 @@ private val searchSeedTutors = listOf(
         description = "Apaixonado por línguas...",
         rating = 4.7,
         reviews = 81,
-        imageResId = R.drawable.pedro
+        imageResId = R.drawable.joaosilva
     )
 )
 

@@ -41,4 +41,9 @@ object ChatRepository {
         )
         return api.sendMessageToSession(sessionId, body)
     }
+
+    suspend fun generateMeetLinkForSession(sessionId: String): String {
+        val resp = api.createMeetLink(sessionId)
+        return resp.meetUrl
+    }
 }

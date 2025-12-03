@@ -93,7 +93,7 @@ val seedTutors = listOf(
         description = "Professor dedicado e paciente que transforma problemas complexos em explicações simples e acessíveis.",
         rating = 4.9,
         reviews = 128,
-        imageResId = R.drawable.pedro
+        imageResId = R.drawable.pedroalmeida
     ),
     Tutor(
         id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864",
@@ -102,7 +102,7 @@ val seedTutors = listOf(
         description = "Engenheira de software apaixonada por ajudar iniciantes a dominar lógica, Java e Kotlin de forma prática.",
         rating = 4.8,
         reviews = 96,
-        imageResId = R.drawable.erica
+        imageResId = R.drawable.ericasantos
     ),
     Tutor(
         id = "baddd584-b456-11f0-95be-c4efbbb92864",
@@ -111,7 +111,7 @@ val seedTutors = listOf(
         description = "Designer gráfica apaixonada por ensinar fundamentos de UI/UX e ferramentas criativas.",
         rating = 4.9,
         reviews = 100,
-        imageResId = R.drawable.rita
+        imageResId = R.drawable.ritafernandes
     ),
     Tutor(
         id = "bade1da4-b456-11f0-95be-c4efbbb92864",
@@ -120,7 +120,7 @@ val seedTutors = listOf(
         description = "Apaixonado por línguas, foco em conversação e gramática aplicada ao dia-a-dia.",
         rating = 4.7,
         reviews = 81,
-        imageResId = R.drawable.pedro
+        imageResId = R.drawable.joaosilva
     )
 )
 

@@ -1,5 +1,7 @@
 package com.example.Peerly.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -77,13 +79,13 @@ fun ChatScreen(
 
     var input by remember { mutableStateOf("") }
     var messages by remember { mutableStateOf<List<ChatMessageDto>>(emptyList()) }
-
     var avatarUrl by remember { mutableStateOf(tutorAvatarUrl) }
     var headerName by remember {
         mutableStateOf(
             tutorName?.takeIf { it.isNotBlank() } ?: "Sessão de Tutoria"
         )
     }
+    var isGeneratingMeet by remember { mutableStateOf(false) }
 
     LaunchedEffect(sessionId) {
         try {
@@ -140,7 +142,7 @@ fun ChatScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 4.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 6.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
@@ -151,14 +153,14 @@ fun ChatScreen(
                 )
             }
 
-            Spacer(Modifier.width(4.dp))
+            Spacer(Modifier.width(6.dp))
 
             if (!avatarUrl.isNullOrBlank()) {
                 AsyncImage(
                     model = avatarUrl,
                     contentDescription = null,
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(36.dp)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
@@ -166,7 +168,7 @@ fun ChatScreen(
                 val initial = (headerName.firstOrNull() ?: 'M').toString()
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(36.dp)
                         .clip(CircleShape)
                         .background(Color.White.copy(alpha = 0.25f)),
                     contentAlignment = Alignment.Center
@@ -175,34 +177,71 @@ fun ChatScreen(
                         initial,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 16.sp
                     )
                 }
             }
 
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(8.dp))
 
             Column(
-                modifier = Modifier
-                    .weight(1f)
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     headerName,
                     color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1
                 )
                 Text(
                     "Chat em tempo real",
                     color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp
+                    fontSize = 12.sp
+                )
+            }
+
+            if (isTutor) {
+                Text(
+                    if (isGeneratingMeet) "..." else "Meet",
+                    color = Color.White,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .clickable(enabled = !isGeneratingMeet) {
+                            if (isGeneratingMeet) return@clickable
+                            scope.launch {
+                                try {
+                                    isGeneratingMeet = true
+                                    val meetUrl = repo.generateMeetLinkForSession(sessionId)
+                                    val textToSend = "Entra na videochamada: $meetUrl"
+                                    if (currentUserId != null) {
+                                        repo.sendMessageToSession(
+                                            sessionId = sessionId,
+                                            senderId = currentUserId,
+                                            text = textToSend
+                                        )
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        "Erro ao gerar link do Meet: ${e.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } finally {
+                                    isGeneratingMeet = false
+                                }
+                            }
+                        }
                 )
             }
 
             Text(
                 "Terminar",
                 color = Color.White,
-                fontSize = 14.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.clickable {
                     if (isTutor) {
@@ -226,6 +265,8 @@ fun ChatScreen(
                 items(messages) { msg ->
                     val fromMe = msg.senderId != null && msg.senderId == currentUserId
                     val text = msg.content ?: ""
+                    val isMeetLink = text.contains("https://meet.google.com")
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = if (fromMe) Arrangement.End else Arrangement.Start
@@ -244,12 +285,28 @@ fun ChatScreen(
                                     if (fromMe) Color(0xFFDCF8C6)
                                     else Color.White
                                 )
+                                .clickable(enabled = isMeetLink) {
+                                    if (isMeetLink) {
+                                        val startIndex = text.indexOf("https://meet.google.com")
+                                        val url = if (startIndex >= 0) {
+                                            text.substring(startIndex).trim().split(" ")[0]
+                                        } else {
+                                            text.trim()
+                                        }
+                                        val intent = Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse(url)
+                                        )
+                                        context.startActivity(intent)
+                                    }
+                                }
                                 .padding(horizontal = 12.dp, vertical = 8.dp)
                         ) {
                             Text(
                                 text,
-                                color = Color(0xFF111111),
-                                fontSize = 15.sp
+                                color = if (isMeetLink) Color(0xFF1565C0) else Color(0xFF111111),
+                                fontSize = 15.sp,
+                                fontWeight = if (isMeetLink) FontWeight.SemiBold else FontWeight.Normal
                             )
                         }
                     }
@@ -270,7 +327,7 @@ fun ChatScreen(
                 onValueChange = { input = it },
                 modifier = Modifier
                     .weight(1f)
-                    .height(52.dp),
+                    .height(48.dp),
                 placeholder = {
                     Text(
                         "Escreve uma mensagem...",
@@ -322,7 +379,7 @@ fun ChatScreen(
                     }
                 },
                 modifier = Modifier
-                    .size(46.dp)
+                    .size(44.dp)
                     .clip(CircleShape)
                     .background(Color(0xFF5C54ED))
             ) {
