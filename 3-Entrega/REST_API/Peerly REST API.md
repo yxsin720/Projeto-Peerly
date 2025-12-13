@@ -1,10 +1,10 @@
-# 📘 Peerly REST API
+# Peerly REST API
 
 Documentação oficial da **Peerly REST API**, responsável pela autenticação, gestão de utilizadores, sessões de tutoria e integração com **Google Meet**.
 
 ---
 
-## 🌐 Base URL (Desenvolvimento Local)
+## Base URL (Desenvolvimento Local)
 
 ```
 http://10.0.2.2:8080/api
@@ -14,7 +14,7 @@ http://10.0.2.2:8080/api
 
 ---
 
-## 📦 Formato de Dados
+## Formato de Dados
 
 - Todas as rotas utilizam **JSON**
 - Header obrigatório:
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ---
 
-## 🔐 AUTHENTICATION
+## AUTHENTICATION
 
 ### POST `/auth/login`
 
@@ -53,7 +53,7 @@ Efetua o login de um utilizador existente.
 
 ---
 
-## 👤 USERS
+## USERS
 
 ### GET `/users`
 Lista todos os utilizadores registados.
@@ -63,7 +63,7 @@ Cria um novo utilizador.
 
 ---
 
-## 🎓 TUTORS
+## TUTORS
 
 Os tutores são utilizadores com:
 ```
@@ -72,7 +72,7 @@ role = "tutor"
 
 ---
 
-## 📅 SESSIONS
+## SESSIONS
 
 ### GET `/sessions`
 Lista todas as sessões de tutoria.
@@ -88,7 +88,7 @@ Remove uma sessão.
 
 ---
 
-## 🎥 GOOGLE MEET
+## GOOGLE MEET
 
 - Geração automática de links Google Meet
 - Integração via Google Calendar API
@@ -96,7 +96,7 @@ Remove uma sessão.
 
 ---
 
-## 📊 HTTP STATUS
+## HTTP STATUS
 
 | Código | Significado |
 |------|------------|
