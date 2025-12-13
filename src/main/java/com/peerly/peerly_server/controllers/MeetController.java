@@ -4,8 +4,10 @@ import com.peerly.peerly_server.models.Session;
 import com.peerly.peerly_server.models.dto.MeetLinkResponse;
 import com.peerly.peerly_server.services.GoogleMeetService;
 import com.peerly.peerly_server.services.SessionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/meet")
@@ -22,18 +24,28 @@ public class MeetController {
     }
 
     @PostMapping("/sessions/{sessionId}")
-    public ResponseEntity<MeetLinkResponse> createMeet(@PathVariable String sessionId) throws Exception {
+    public ResponseEntity<MeetLinkResponse> createMeetForSession(@PathVariable String sessionId) {
         Session s = sessionService.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Sessão não encontrada."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sessão não encontrada"));
 
-        String title = s.getTitle() != null ? s.getTitle() : "Peerly Meeting";
+        try {
+            String title = s.getTitle() != null && !s.getTitle().isBlank()
+                    ? s.getTitle()
+                    : "Sessão Peerly";
 
-        String meetUrl = meetService.createMeetSpace(title);
+            String joinUrl = meetService.createMeetSpace(title);
 
-        MeetLinkResponse dto = new MeetLinkResponse();
-        dto.setSessionId(sessionId);
-        dto.setMeetUrl(meetUrl);
+            MeetLinkResponse dto = new MeetLinkResponse();
+            dto.setSessionId(sessionId);
+            dto.setMeetUrl(joinUrl);
 
-        return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(dto);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Erro ao criar sala no Google Meet: " + ex.getMessage(),
+                    ex
+            );
+        }
     }
 }
