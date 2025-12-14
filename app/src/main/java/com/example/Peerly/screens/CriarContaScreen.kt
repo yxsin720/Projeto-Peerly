@@ -1,5 +1,6 @@
 package com.example.Peerly.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,6 +44,7 @@ fun CriarContaScreen(navController: NavController) {
     var loading by remember { mutableStateOf(false) }
     var createdOk by remember { mutableStateOf(false) }
 
+    @SuppressLint("SuspiciousIndentation")
     fun submit() {
         error = null
         if (nome.isBlank() || email.isBlank() || password.isBlank() || confirm.isBlank()) {

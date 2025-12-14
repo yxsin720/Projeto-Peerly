@@ -87,7 +87,7 @@ data class Tutor(
 
 val seedTutors = listOf(
     Tutor(
-        id = "2d238e82-bc00-11f0-a9b0-c4efbbb92864",
+        id = "51559921-d00c-11f0-9a68-c4efbbb92864",
         name = "Pedro Almeida",
         subject = "MATEMÁTICA",
         description = "Professor dedicado e paciente que transforma problemas complexos em explicações simples e acessíveis.",
@@ -96,7 +96,7 @@ val seedTutors = listOf(
         imageResId = R.drawable.pedroalmeida
     ),
     Tutor(
-        id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864",
+        id = "51559bec-d00c-11f0-9a68-c4efbbb92864",
         name = "Erica Santos",
         subject = "PROGRAMAÇÃO",
         description = "Engenheira de software apaixonada por ajudar iniciantes a dominar lógica, Java e Kotlin de forma prática.",
@@ -105,7 +105,7 @@ val seedTutors = listOf(
         imageResId = R.drawable.ericasantos
     ),
     Tutor(
-        id = "baddd584-b456-11f0-95be-c4efbbb92864",
+        id = "c3c266eb-d009-11f0-806f-c4efbbb92864",
         name = "Rita Fernandes",
         subject = "DESIGN",
         description = "Designer gráfica apaixonada por ensinar fundamentos de UI/UX e ferramentas criativas.",
@@ -114,7 +114,7 @@ val seedTutors = listOf(
         imageResId = R.drawable.ritafernandes
     ),
     Tutor(
-        id = "bade1da4-b456-11f0-95be-c4efbbb92864",
+        id = "c3c2b4c2-d009-11f0-806f-c4efbbb92864",
         name = "João Silva",
         subject = "INGLÊS",
         description = "Apaixonado por línguas, foco em conversação e gramática aplicada ao dia-a-dia.",

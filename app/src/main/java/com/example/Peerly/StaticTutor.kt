@@ -22,7 +22,7 @@ object StaticTutors {
             id = "2d23944a-bc00-11f0-a9b0-c4efbbb92864",
             name = "Erica Santos",
             subject = "Programação",
-            avatarRes = R.drawable.erica
+            avatarRes = R.drawable.rita
         ),
         StaticTutor(
             id = "baddd584-b456-11f0-95be-c4efbbb92864",

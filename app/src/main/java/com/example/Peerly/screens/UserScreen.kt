@@ -35,7 +35,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.Peerly.R
 import com.example.Peerly.data.AuthRepository
-import com.example.Peerly.session.UserPrefs          // <-- IMPORT CORRETO
+import com.example.Peerly.session.UserPrefs
 import com.example.Peerly.session.UserSession
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 import kotlinx.coroutines.Dispatchers
@@ -92,19 +92,25 @@ fun UserScreen(navController: NavController) {
                 .padding(top = 4.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             Row(
-                modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null,
                     tint = Color.White,
-                    modifier = Modifier.size(topBarIconSize).clickable { navController.popBackStack() }
+                    modifier = Modifier
+                        .size(topBarIconSize)
+                        .clickable { navController.popBackStack() }
                 )
             }
 
             Spacer(Modifier.height(pct(12.dp, 0.03f)))
+
 
             EditAvatar(
                 size = avatarSize,
@@ -112,7 +118,8 @@ fun UserScreen(navController: NavController) {
                 currentUrl = avatarModel,
                 onUploaded = { absoluteUrl ->
                     val withBust = absoluteUrl.trim() +
-                            if ('?' in absoluteUrl) "&t=${System.currentTimeMillis()}" else "?t=${System.currentTimeMillis()}"
+                            if ('?' in absoluteUrl) "&t=${System.currentTimeMillis()}"
+                            else "?t=${System.currentTimeMillis()}"
                     avatarModel = withBust
                     UserSession.updateAvatar(ctx, withBust)
                 },
@@ -125,6 +132,7 @@ fun UserScreen(navController: NavController) {
 
             Spacer(Modifier.height(pct(8.dp, 0.02f)))
 
+
             Text(
                 text = displayName,
                 color = Color.White,
@@ -132,6 +140,7 @@ fun UserScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic
             )
+
 
             Text(
                 text = if (area.isBlank()) "Escolher área/curso" else "Estudante de $area",
@@ -142,8 +151,11 @@ fun UserScreen(navController: NavController) {
 
             Spacer(Modifier.height(pct(18.dp, 0.04f)))
 
+
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = pct(20.dp, 0.06f)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = pct(20.dp, 0.06f)),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -154,17 +166,36 @@ fun UserScreen(navController: NavController) {
 
             Spacer(Modifier.height(pct(22.dp, 0.05f)))
 
+
             Column(verticalArrangement = Arrangement.spacedBy(cardSpacing)) {
-                NavCard("Meus tutores", cardCorner, cardHPadding, cardVPadding) { }
-                NavCard("Histórico de sessões", cardCorner, cardHPadding, cardVPadding) { }
-                NavCard("Configurações", cardCorner, cardHPadding, cardVPadding) { }
+
+                NavCard("Meus tutores", cardCorner, cardHPadding, cardVPadding) {
+
+                    navController.navigate("search_tutors") {
+                        launchSingleTop = true
+                    }
+                }
+
+                NavCard("Histórico de sessões", cardCorner, cardHPadding, cardVPadding) {
+
+                    navController.navigate("proxima_sessao") {
+                        launchSingleTop = true
+                    }
+                }
+
+                NavCard("Configurações", cardCorner, cardHPadding, cardVPadding) {
+
+                }
             }
 
             Spacer(Modifier.height(pct(24.dp, 0.06f)))
 
+
             Button(
-                onClick = { },
-                modifier = Modifier.fillMaxWidth(0.88f).height(editBtnHeight),
+                onClick = {  },
+                modifier = Modifier
+                    .fillMaxWidth(0.88f)
+                    .height(editBtnHeight),
                 shape = RoundedCornerShape(editBtnRadius),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 contentPadding = PaddingValues(0.dp),
@@ -191,16 +222,20 @@ fun UserScreen(navController: NavController) {
 
             Spacer(Modifier.height(12.dp))
 
+
             Button(
                 onClick = {
                     UserSession.clear()
                     try { UserPrefs.clearAll(ctx) } catch (_: Throwable) {}
+
                     navController.navigate("login") {
                         popUpTo("splash") { inclusive = true }
                         launchSingleTop = true
                     }
                 },
-                modifier = Modifier.fillMaxWidth(0.88f).height(editBtnHeight),
+                modifier = Modifier
+                    .fillMaxWidth(0.88f)
+                    .height(editBtnHeight),
                 shape = RoundedCornerShape(editBtnRadius),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
             ) {
@@ -215,6 +250,7 @@ fun UserScreen(navController: NavController) {
             Spacer(Modifier.height(pct(16.dp, 0.04f)))
         }
 
+
         if (showAreaSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showAreaSheet = false },
@@ -228,7 +264,9 @@ fun UserScreen(navController: NavController) {
                     fontSize = 18.sp,
                     modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
                 )
+
                 Spacer(Modifier.height(8.dp))
+
                 areas.forEach { a ->
                     Row(
                         modifier = Modifier
@@ -262,6 +300,7 @@ fun UserScreen(navController: NavController) {
                         }
                     }
                 }
+
                 Spacer(Modifier.height(24.dp))
             }
         }
@@ -284,7 +323,9 @@ private fun StatItem(
 @Composable
 private fun NavCard(text: String, corner: Dp, hPad: Dp, vPad: Dp, onClick: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         shape = RoundedCornerShape(corner),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
@@ -332,6 +373,7 @@ private fun EditAvatar(
         val req = remember(model) {
             ImageRequest.Builder(ctx).data(model).crossfade(true).build()
         }
+
         AsyncImage(
             model = req,
             contentDescription = null,
@@ -360,6 +402,7 @@ private fun EditAvatar(
     LaunchedEffect(localUri) {
         val uri = localUri ?: return@LaunchedEffect
         if (onUpload == null) return@LaunchedEffect
+
         isUploading = true
         try {
             val file = withContext(Dispatchers.IO) {
@@ -369,6 +412,7 @@ private fun EditAvatar(
                 }
                 f
             }
+
             val returned = onUpload(file).orEmpty()
             val absolute = when {
                 returned.isBlank() -> ""
@@ -376,6 +420,7 @@ private fun EditAvatar(
                 returned.startsWith("/") && baseUrl.isNotBlank() -> baseUrl.trimEnd('/') + returned
                 else -> returned
             }
+
             if (absolute.isNotBlank()) onUploaded(absolute)
         } finally {
             isUploading = false

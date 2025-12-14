@@ -61,7 +61,6 @@ import com.example.Peerly.R
 import com.example.Peerly.data.readTutorPhoto
 import com.example.Peerly.ui.theme.MyApplicationPeerly4Theme
 
-
 private val searchSeedTutors = listOf(
     Tutor(
         id = "2d238e82-bc00-11f0-a9b0-c4efbbb92864",
@@ -101,8 +100,6 @@ private val searchSeedTutors = listOf(
     )
 )
 
-
-
 @Composable
 fun SearchTutorsScreen(navController: NavController) {
 
@@ -123,17 +120,55 @@ fun SearchTutorsScreen(navController: NavController) {
 
     val categories = listOf("Todas", "Matemática", "Programação", "Design", "Inglês")
 
-    val filtered = searchSeedTutors.filter { tutor ->
-        val categoryOk =
-            selectedCategory == 0 || tutor.subject.contains(categories[selectedCategory], ignoreCase = true)
+    val setA: Set<String> = searchSeedTutors
+        .filter { tutor ->
+            selectedCategory == 0 ||
+                    tutor.subject.contains(categories[selectedCategory], ignoreCase = true)
+        }
+        .map { it.id }
+        .toSet()
 
-        val textOk =
-            query.isBlank() ||
-                    tutor.name.lowercase().contains(query.lowercase()) ||
-                    tutor.subject.lowercase().contains(query.lowercase())
 
-        categoryOk && textOk
-    }
+    val normalizedQuery = query.lowercase()
+    val setB: Set<String> = searchSeedTutors
+        .filter { tutor ->
+            normalizedQuery.isBlank() ||
+                    tutor.name.lowercase().contains(normalizedQuery) ||
+                    tutor.subject.lowercase().contains(normalizedQuery)
+        }
+        .map { it.id }
+        .toSet()
+
+
+    val baseSet: Set<String> = setA intersect setB
+
+
+
+    val highRatedSet: Set<String> = searchSeedTutors
+        .filter { it.rating >= 4.8 }
+        .map { it.id }
+        .toSet()
+
+
+    val popularSet: Set<String> = searchSeedTutors
+        .filter { it.reviews >= 100 }
+        .map { it.id }
+        .toSet()
+
+
+    val strongSet: Set<String> = highRatedSet union popularSet
+
+
+    val preferredSet: Set<String> = baseSet intersect strongSet
+
+
+    val remainingSet: Set<String> = baseSet - preferredSet
+
+
+    val preferredTutors = searchSeedTutors.filter { it.id in preferredSet }
+    val remainingTutors = searchSeedTutors.filter { it.id in remainingSet }
+
+    val filtered = preferredTutors + remainingTutors
 
     Column(
         modifier = Modifier
@@ -144,7 +179,6 @@ fun SearchTutorsScreen(navController: NavController) {
     ) {
 
         Spacer(Modifier.height(8.dp))
-
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -170,7 +204,6 @@ fun SearchTutorsScreen(navController: NavController) {
         }
 
         Spacer(Modifier.height(22.dp))
-
 
         OutlinedTextField(
             value = query,
@@ -234,7 +267,6 @@ fun SearchTutorsScreen(navController: NavController) {
 
         Spacer(Modifier.height(20.dp))
 
-
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -259,8 +291,6 @@ fun SearchTutorsScreen(navController: NavController) {
     }
 }
 
-
-
 @Composable
 private fun TutorResultCard(
     tutor: Tutor,
@@ -279,7 +309,6 @@ private fun TutorResultCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
 
             Box(
                 modifier = Modifier
@@ -302,7 +331,6 @@ private fun TutorResultCard(
                     )
                 }
             }
-
 
             Spacer(Modifier.width(16.dp))
 
@@ -359,8 +387,6 @@ private fun TutorResultCard(
         }
     }
 }
-
-
 
 @Preview(showBackground = true, backgroundColor = 0xFF5C54ED)
 @Composable
