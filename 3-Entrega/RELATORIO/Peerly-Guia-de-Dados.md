@@ -1,4 +1,4 @@
-# 📘 Peerly — Guia de Dados (Versão Atualizada)
+# Peerly — Guia de Dados (Versão Atualizada)
 
 ## 1. Visão Geral
 A **Peerly** é uma plataforma de tutoria digital que liga **tutores** e **alunos** através de sessões agendadas, com chat em tempo real e integração com **Google Meet**.
